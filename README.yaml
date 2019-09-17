@@ -1,0 +1,104 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name : Terraform AWS Lambda
+
+# License of this project
+license: "MIT"
+
+# Canonical GitHub repo
+github_repo: clouddrove/terraform-aws-lambda
+
+# Badges to display
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v0.12-green"
+    url: "https://www.terraform.io"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-MIT-blue.svg"
+    url: "LICENSE.md"
+
+#  description of this project
+description: |-
+  Terraform module to create Lambda resource on AWS for create lambda function.
+
+# extra content
+# please not remove these two If you need add more
+include:
+  - "terraform.md"
+
+# How to use this project
+usage : |-
+  Here are some examples of how you can use this module in your inventory structure:
+  ### Basic Function
+  ```hcl
+    module "lambda" {
+      source         = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.0"
+      name           = "lambda"
+      application    = "clouddrove"
+      environment    = "test"
+      label_order    = ["environment", "name", "application"]
+      enabled        = true
+      filename       = "./../../../lambda_function_payload"
+      handler        = "index.handler"
+      runtime        = "nodejs8.10"
+    }
+  ```
+  ### Basic S3 Function
+  ```hcl
+    module "lambda" {
+      source        = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.0"
+      name          = "lambda"
+      application   = "clouddrove"
+      environment   = "test"
+      label_order   = ["environment", "name", "application"]
+      enabled       = true
+      s3_bucket     = "test-mysql-backups"
+      s3_key        = "lambda_function_payload.zip"
+      handler       = "index.handler"
+      runtime       = "nodejs8.10"
+    }
+  ```
+  ### Complete Function
+  ```hcl
+    module "lambda" {
+      source               = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.0"
+      name                 = "lambda"
+      application          = "clouddrove"
+      environment          = "test"
+      label_order          = ["environment", "name", "application"]
+      enabled              = true
+      filename             = "./../../../lambda_function_payload"
+      handler              = "index.handler"
+      runtime              = "nodejs8.10"
+      names                = [
+                              "lambda_layer_name"
+                            ]
+      filenames            = [
+                              {
+                                "input"="./../../../lambda_function_payload",
+                                "output"="lambda_function_payload.zip",
+                              }
+                            ]
+      compatible_runtimes  = [
+                              ["nodejs8.10"]
+                            ]
+
+      statement_ids        = [
+                              "AllowExecutionFromSNS"
+                            ]
+      actions              = [
+                              "lambda:InvokeFunction"
+                            ]
+      principals           = [
+                              "sns.amazonaws.com"
+                            ]
+      source_arns          = [
+                              "arn:aws:sns:eu-west-1:866067750630:test-sns-clouddrove"
+                            ]
+    }
+  ```
