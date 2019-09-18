@@ -210,3 +210,15 @@ variable "source_accounts" {
   default     = []
   description = "This parameter is used for S3 and SES. The AWS account ID (without a hyphen) of the source owner."
 }
+
+variable "subnet_ids" {
+  type        = list
+  default     = []
+  description = "Subnet ids for vpc config."
+}
+
+variable "security_group_ids" {
+  type        = list
+  default     = []
+  description = "Security group ids for vpc config."
+}
