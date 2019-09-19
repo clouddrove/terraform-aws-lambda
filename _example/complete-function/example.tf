@@ -41,4 +41,7 @@ module "lambda" {
   source_arns = [
     "arn:aws:sns:eu-west-1:xxxxxxxxxxxxxx:test-sns-clouddrove"
   ]
+  variables = {
+    foo = "bar"
+  }
 }
