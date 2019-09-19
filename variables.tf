@@ -222,3 +222,9 @@ variable "security_group_ids" {
   default     = []
   description = "Security group ids for vpc config."
 }
+
+variable "variables" {
+  type        = map
+  default     = {}
+  description = "A map that defines environment variables for the Lambda function."
+}

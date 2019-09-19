@@ -133,6 +133,9 @@ resource "aws_lambda_function" "default" {
     subnet_ids         = var.subnet_ids
     security_group_ids = var.security_group_ids
   }
+  environment {
+   variables = var.variables
+  }
   depends_on = ["aws_iam_role_policy_attachment.default"]
 }
 
