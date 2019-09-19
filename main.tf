@@ -51,9 +51,15 @@ resource "aws_iam_policy" "default" {
       "Action": [
         "logs:CreateLogStream",
         "logs:CreateLogGroup",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "ec2:CreateNetworkInterface",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:DeleteNetworkInterface",
+        "ec2:DescribeSecurityGroups",
+        "sqs:SendMessage",
+        "sns:Publish"
       ],
-      "Resource": "arn:aws:logs:*:*:*",
+      "Resource": "*",
       "Effect": "Allow"
     }
   ]
@@ -68,6 +74,8 @@ resource "aws_iam_role_policy_attachment" "default" {
   policy_arn = aws_iam_policy.default.arn
 }
 
+# Module      : Archive file
+# Description : Terraform module to zip a directory.
 data "archive_file" "lambda_zip" {
     count       = length(var.filenames) > 0 ? length(var.filenames) : 0
     type        = "zip"
@@ -90,6 +98,8 @@ resource "aws_lambda_layer_version" "default" {
   source_code_hash    = length(var.filenames) > 0 ? filesha256(element(var.filenames, count.index)["output"]) : ""
 }
 
+# Module      : Archive file
+# Description : Terraform module to zip a directory.
 data "archive_file" "default" {
     count       = var.filename != null ? 1 : 0
     type        = "zip"
@@ -105,7 +115,7 @@ resource "aws_lambda_function" "default" {
   function_name                  = module.labels.id
   description                    = var.description
   role                           = aws_iam_role.default.arn
-  filename                       = "lambda.zip"
+  filename                       = var.filename != null ? "lambda.zip" : null
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
   s3_object_version              = var.s3_object_version
@@ -119,7 +129,11 @@ resource "aws_lambda_function" "default" {
   kms_key_arn                    = var.kms_key_arn
   source_code_hash               = var.filename != null ? filesha256("lambda.zip") : ""
   tags                           = module.labels.tags
-  depends_on                     = ["aws_iam_role_policy_attachment.default"]
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = var.security_group_ids
+  }
+  depends_on = ["aws_iam_role_policy_attachment.default"]
 }
 
 resource "aws_lambda_permission" "default" {

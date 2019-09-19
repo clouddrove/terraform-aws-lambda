@@ -75,30 +75,32 @@ usage : |-
       filename             = "./../../../lambda_function_payload"
       handler              = "index.handler"
       runtime              = "nodejs8.10"
+      subnet_ids           = ["subnet-xxxxxxxxxxxxxx", "subnet-xxxxxxxxxxxxxx"]
+      security_group_ids   = ["sg-xxxxxxxxxxxxxx", "sg-xxxxxxxxxxxxxx"]
       names                = [
                               "lambda_layer_name"
-                            ]
+                             ]
       filenames            = [
                               {
                                 "input"="./../../../lambda_function_payload",
                                 "output"="lambda_function_payload.zip",
                               }
-                            ]
+                             ]
       compatible_runtimes  = [
                               ["nodejs8.10"]
-                            ]
+                             ]
 
       statement_ids        = [
                               "AllowExecutionFromSNS"
-                            ]
+                             ]
       actions              = [
                               "lambda:InvokeFunction"
-                            ]
+                             ]
       principals           = [
                               "sns.amazonaws.com"
-                            ]
+                             ]
       source_arns          = [
-                              "arn:aws:sns:eu-west-1:866067750630:test-sns-clouddrove"
-                            ]
+                              "arn:aws:sns:eu-west-1:xxxxxxxxxxxxxx:test-sns-clouddrove"
+                             ]
     }
   ```
