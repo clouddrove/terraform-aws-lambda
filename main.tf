@@ -139,14 +139,17 @@ resource "aws_lambda_function" "default" {
   depends_on = ["aws_iam_role_policy_attachment.default"]
 }
 
+# Module      : Lambda Permission
+# Description : Terraform module to create Lambda permission resource on AWS to create
+#               trigger for function.
 resource "aws_lambda_permission" "default" {
   count              = length(var.actions) > 0 ? length(var.actions) : 0
   statement_id       = length(var.statement_ids) > 0 ? element(var.statement_ids, count.index) : ""
-  event_source_token = length(var.license_infos) > 0 ? element(var.event_source_tokens, count.index) : null
+  event_source_token = length(var.event_source_tokens) > 0 ? element(var.event_source_tokens, count.index) : null
   action             = element(var.actions, count.index)
   function_name      = aws_lambda_function.default.*.function_name[0]
   principal          = element(var.principals, count.index)
-  qualifier          = length(var.license_infos) > 0 ? element(var.qualifiers, count.index) : null
-  source_account     = length(var.license_infos) > 0 ? element(var.source_accounts, count.index) : null
+  qualifier          = length(var.qualifiers) > 0 ? element(var.qualifiers, count.index) : null
+  source_account     = length(var.source_accounts) > 0 ? element(var.source_accounts, count.index) : null
   source_arn         = length(var.source_arns) > 0 ? element(var.source_arns, count.index) : ""
 }

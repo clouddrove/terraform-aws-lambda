@@ -42,8 +42,8 @@ variable "tags" {
   description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
 
-# Module      : Route53
-# Description : Terraform Route53 module variables.
+# Module      : Lambda function
+# Description : Terraform Lambda function module variables.
 variable "enabled" {
   type        = bool
   default     = false
