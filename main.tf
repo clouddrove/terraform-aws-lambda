@@ -136,6 +136,13 @@ resource "aws_lambda_function" "default" {
   environment {
    variables = var.variables
   }
+  lifecycle {
+   # Ignore tags added by kubernetes
+   ignore_changes = [
+     "source_code_hash",
+     "last_modified"
+   ]
+  }
   depends_on = ["aws_iam_role_policy_attachment.default"]
 }
 
