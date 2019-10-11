@@ -39,32 +39,19 @@ EOF
 # Module      : Iam policy
 # Description : Terraform module to create Iam policy resource on AWS for lambda.
 resource "aws_iam_policy" "default" {
-  name = "lambda_logging"
-  path = "/"
+  name        = "lambda_logging"
+  path        = "/"
   description = "IAM policy for logging from a lambda"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "logs:CreateLogStream",
-        "logs:CreateLogGroup",
-        "logs:PutLogEvents",
-        "ec2:CreateNetworkInterface",
-        "ec2:DescribeNetworkInterfaces",
-        "ec2:DeleteNetworkInterface",
-        "ec2:DescribeSecurityGroups",
-        "sqs:SendMessage",
-        "sns:Publish"
-      ],
-      "Resource": "*",
-      "Effect": "Allow"
-    }
-  ]
+  policy = data.aws_iam_policy_document.default.json
 }
-EOF
+
+data "aws_iam_policy_document" "default" {
+  statement {
+    actions   = var.iam_actions
+    effect    = "Allow"
+    resources = ["*"]
+  }
 }
 
 # Module      : Iam Role Policy Attachment
@@ -77,10 +64,10 @@ resource "aws_iam_role_policy_attachment" "default" {
 # Module      : Archive file
 # Description : Terraform module to zip a directory.
 data "archive_file" "lambda_zip" {
-    count       = length(var.filenames) > 0 ? length(var.filenames) : 0
-    type        = "zip"
-    source_dir  = element(var.filenames, count.index)["input"]
-    output_path = element(var.filenames, count.index)["output"]
+  count       = length(var.filenames) > 0 ? length(var.filenames) : 0
+  type        = "zip"
+  source_dir  = element(var.filenames, count.index)["input"]
+  output_path = element(var.filenames, count.index)["output"]
 }
 
 # Module      : Lambda layers
@@ -101,10 +88,10 @@ resource "aws_lambda_layer_version" "default" {
 # Module      : Archive file
 # Description : Terraform module to zip a directory.
 data "archive_file" "default" {
-    count       = var.filename != null ? 1 : 0
-    type        = "zip"
-    source_dir  = var.filename
-    output_path = "lambda.zip"
+  count       = var.filename != null ? 1 : 0
+  type        = "zip"
+  source_dir  = var.filename
+  output_path = "lambda.zip"
 }
 
 # Module      : Lambda function
@@ -134,14 +121,14 @@ resource "aws_lambda_function" "default" {
     security_group_ids = var.security_group_ids
   }
   environment {
-   variables = var.variables
+    variables = var.variables
   }
   lifecycle {
-   # Ignore tags added by kubernetes
-   ignore_changes = [
-     "source_code_hash",
-     "last_modified"
-   ]
+    # Ignore tags added by kubernetes
+    ignore_changes = [
+      "source_code_hash",
+      "last_modified"
+    ]
   }
   depends_on = ["aws_iam_role_policy_attachment.default"]
 }

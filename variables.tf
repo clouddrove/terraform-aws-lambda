@@ -181,6 +181,12 @@ variable "event_source_tokens" {
   description = "The Event Source Token to validate. Used with Alexa Skills."
 }
 
+variable "iam_actions" {
+  type        = list
+  default     = []
+  description = "The actions for Iam Role Policy."
+}
+
 variable "actions" {
   type        = list
   default     = []

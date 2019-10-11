@@ -171,6 +171,7 @@ Here are some examples of how you can use this module in your inventory structur
 | filename | The path to the function's deployment package within the local filesystem. If defined, The s3_-prefixed options cannot be used. | string | `` | no |
 | filenames | The path to the function's deployment package within the local filesystem. If defined, The s3_-prefixed options cannot be used. | list | `<list>` | no |
 | handler | The function entrypoint in your code. | string | - | yes |
+| iam_actions | The actions for Iam Role Policy. | list | `<list>` | no |
 | kms_key_arn | The ARN for the KMS encryption key. | string | `` | no |
 | label_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
 | layers | List of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda Function. | string | `` | no |
