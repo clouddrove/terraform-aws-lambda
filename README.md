@@ -118,6 +118,15 @@ Here are some examples of how you can use this module in your inventory structur
     runtime              = "nodejs8.10"
     subnet_ids           = ["subnet-xxxxxxxxxxxxxx", "subnet-xxxxxxxxxxxxxx"]
     security_group_ids   = ["sg-xxxxxxxxxxxxxx", "sg-xxxxxxxxxxxxxx"]
+    iam_actions          = [
+                            "logs:CreateLogStream",
+                            "logs:CreateLogGroup",
+                            "logs:PutLogEvents",
+                            "ec2:CreateNetworkInterface",
+                            "ec2:DescribeNetworkInterfaces",
+                            "ec2:DeleteNetworkInterface",
+                            "ec2:DescribeSecurityGroups",
+                           ]
     names                = [
                             "lambda_layer_name"
                            ]
