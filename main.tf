@@ -114,7 +114,7 @@ resource "aws_lambda_function" "default" {
   reserved_concurrent_executions = var.reserved_concurrent_executions
   publish                        = var.publish
   kms_key_arn                    = var.kms_key_arn
-  source_code_hash               = var.filename != null ? filesha256("lambda.zip") : ""
+  source_code_hash               = var.filename != null ? filesha256(format("%s.zip", module.labels.id)) : ""
   tags                           = module.labels.tags
   vpc_config {
     subnet_ids         = var.subnet_ids
