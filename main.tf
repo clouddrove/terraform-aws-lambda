@@ -91,7 +91,7 @@ data "archive_file" "default" {
   count       = var.filename != null ? 1 : 0
   type        = "zip"
   source_dir  = var.filename
-  output_path = "lambda.zip"
+  output_path = format("%s.zip", module.labels.id)
 }
 
 # Module      : Lambda function
@@ -102,7 +102,7 @@ resource "aws_lambda_function" "default" {
   function_name                  = module.labels.id
   description                    = var.description
   role                           = aws_iam_role.default.arn
-  filename                       = var.filename != null ? "lambda.zip" : null
+  filename                       = var.filename != null ? format("%s.zip", module.labels.id) : null
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
   s3_object_version              = var.s3_object_version
