@@ -17,7 +17,7 @@ module "labels" {
 # Module      : Iam role
 # Description : Terraform module to create Iam role resource on AWS for lambda.
 resource "aws_iam_role" "default" {
-  name = "lambda_role"
+  name = format("%s_role", module.labels.id)
 
   assume_role_policy = <<EOF
 {
@@ -39,7 +39,7 @@ EOF
 # Module      : Iam policy
 # Description : Terraform module to create Iam policy resource on AWS for lambda.
 resource "aws_iam_policy" "default" {
-  name        = "lambda_logging"
+  name        = format("%s_logging", module.labels.id)
   path        = "/"
   description = "IAM policy for logging from a lambda"
 
