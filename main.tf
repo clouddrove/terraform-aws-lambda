@@ -17,7 +17,8 @@ module "labels" {
 # Module      : Iam role
 # Description : Terraform module to create Iam role resource on AWS for lambda.
 resource "aws_iam_role" "default" {
-  name = format("%s-role", module.labels.id)
+  count = var.enabled ? 1 : 0
+  name  = format("%s-role", module.labels.id)
 
   assume_role_policy = <<EOF
 {
@@ -39,6 +40,7 @@ EOF
 # Module      : Iam policy
 # Description : Terraform module to create Iam policy resource on AWS for lambda.
 resource "aws_iam_policy" "default" {
+  count       = var.enabled ? 1 : 0
   name        = format("%s-logging", module.labels.id)
   path        = "/"
   description = "IAM policy for logging from a lambda"
@@ -57,8 +59,9 @@ data "aws_iam_policy_document" "default" {
 # Module      : Iam Role Policy Attachment
 # Description : Terraform module to attach Iam policy with role resource on AWS for lambda.
 resource "aws_iam_role_policy_attachment" "default" {
-  role       = aws_iam_role.default.name
-  policy_arn = aws_iam_policy.default.arn
+  count      = var.enabled ? 1 : 0
+  role       = join("", aws_iam_role.default.*.name)
+  policy_arn = join("", aws_iam_policy.default.*.arn)
 }
 
 # Module      : Archive file
@@ -101,7 +104,7 @@ resource "aws_lambda_function" "default" {
 
   function_name                  = module.labels.id
   description                    = var.description
-  role                           = aws_iam_role.default.arn
+  role                           = join("", aws_iam_role.default.*.arn)
   filename                       = var.filename != null ? format("%s.zip", module.labels.id) : null
   s3_bucket                      = var.s3_bucket
   s3_key                         = var.s3_key
@@ -137,11 +140,11 @@ resource "aws_lambda_function" "default" {
 # Description : Terraform module to create Lambda permission resource on AWS to create
 #               trigger for function.
 resource "aws_lambda_permission" "default" {
-  count              = length(var.actions) > 0 ? length(var.actions) : 0
+  count              = length(var.actions) > 0 && var.enabled ? length(var.actions) : 0
   statement_id       = length(var.statement_ids) > 0 ? element(var.statement_ids, count.index) : ""
   event_source_token = length(var.event_source_tokens) > 0 ? element(var.event_source_tokens, count.index) : null
   action             = element(var.actions, count.index)
-  function_name      = aws_lambda_function.default.*.function_name[0]
+  function_name      = join("", aws_lambda_function.default.*.function_name)
   principal          = element(var.principals, count.index)
   qualifier          = length(var.qualifiers) > 0 ? element(var.qualifiers, count.index) : null
   source_account     = length(var.source_accounts) > 0 ? element(var.source_accounts, count.index) : null

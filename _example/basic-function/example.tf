@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "lambda" {
-  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.0"
+  source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.2"
 
   name        = "lambda"
   application = "clouddrove"
