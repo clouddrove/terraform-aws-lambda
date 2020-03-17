@@ -129,11 +129,11 @@ resource "aws_lambda_function" "default" {
   lifecycle {
     # Ignore tags added by kubernetes
     ignore_changes = [
-      "source_code_hash",
-      "last_modified"
+      source_code_hash,
+      last_modified
     ]
   }
-  depends_on = ["aws_iam_role_policy_attachment.default"]
+  depends_on = [aws_iam_role_policy_attachment.default]
 }
 
 # Module      : Lambda Permission
