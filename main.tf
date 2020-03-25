@@ -11,6 +11,7 @@ module "labels" {
   name        = var.name
   application = var.application
   environment = var.environment
+  managedby   = var.managedby
   label_order = var.label_order
 }
 
@@ -67,7 +68,7 @@ resource "aws_iam_role_policy_attachment" "default" {
 # Module      : Archive file
 # Description : Terraform module to zip a directory.
 data "archive_file" "lambda_zip" {
-  count       = length(var.filenames) > 0 ? length(var.filenames) : 0
+  count       = var.enabled && length(var.filenames) > 0 ? length(var.filenames) : 0
   type        = "zip"
   source_dir  = element(var.filenames, count.index)["input"]
   output_path = element(var.filenames, count.index)["output"]
@@ -76,7 +77,7 @@ data "archive_file" "lambda_zip" {
 # Module      : Lambda layers
 # Description : Terraform module to create Lambda layers resource on AWS.
 resource "aws_lambda_layer_version" "default" {
-  count               = length(var.names) > 0 ? length(var.names) : 0
+  count               = length(var.names) > 0 && var.enabled ? length(var.names) : 0
   filename            = length(var.filenames) > 0 ? element(var.filenames, count.index)["output"] : null
   s3_bucket           = length(var.s3_buckets) > 0 ? element(var.s3_buckets, count.index) : null
   s3_key              = length(var.s3_keies) > 0 ? element(var.s3_keies, count.index) : null
@@ -91,7 +92,7 @@ resource "aws_lambda_layer_version" "default" {
 # Module      : Archive file
 # Description : Terraform module to zip a directory.
 data "archive_file" "default" {
-  count       = var.filename != null ? 1 : 0
+  count       = var.enabled && var.filename != null ? 1 : 0
   type        = "zip"
   source_dir  = var.filename
   output_path = format("%s.zip", module.labels.id)
