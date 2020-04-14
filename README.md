@@ -72,7 +72,7 @@ Here are some examples of how you can use this module in your inventory structur
 ### Basic Function
 ```hcl
   module "lambda" {
-    source         = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.4"
+    source         = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
     name           = "lambda"
     application    = "clouddrove"
     environment    = "test"
@@ -89,7 +89,7 @@ Here are some examples of how you can use this module in your inventory structur
 ### Basic S3 Function
 ```hcl
   module "lambda" {
-    source        = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.4"
+    source        = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
     name          = "lambda"
     application   = "clouddrove"
     environment   = "test"
@@ -107,7 +107,7 @@ Here are some examples of how you can use this module in your inventory structur
 ### Complete Function
 ```hcl
   module "lambda" {
-    source = "../../"
+    source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
 
     name        = "lambda"
     application = "clouddrove"
@@ -141,7 +141,7 @@ Here are some examples of how you can use this module in your inventory structur
     principals = [
       "events.amazonaws.com"
     ]
-    source_arns = [""]
+    source_arns = ["arn:aws:events:eu-west-1:xxxxxxxxxxxxx:rule/rulename"]
     variables = {
       foo  = "bar"
     }
