@@ -37,7 +37,7 @@ module "lambda" {
   principals = [
     "events.amazonaws.com"
   ]
-  source_arns = [""]
+  source_arns = ["arn:aws:events:eu-west-1:xxxxxxxxxxxxx:rule/rulename"]
   variables = {
     foo = "bar"
   }
