@@ -10,46 +10,34 @@ module "lambda" {
   environment = "test"
   label_order = ["environment", "name", "application"]
   enabled     = true
+  timeout     = 60
 
-  filename           = "./../../../lambda_function_payload"
-  handler            = "index.handler"
-  runtime            = "nodejs8.10"
-  subnet_ids         = ["subnet-xxxxxxxxxxxxxx", "subnet-xxxxxxxxxxxxxx"]
-  security_group_ids = ["sg-xxxxxxxxxxxxxx", "sg-xxxxxxxxxxxxxx"]
+  filename = "./../../lambda/src"
+  handler  = "index.lambda_handler"
+  runtime  = "python3.8"
   iam_actions = [
     "logs:CreateLogStream",
     "logs:CreateLogGroup",
-    "logs:PutLogEvents",
-    "ec2:CreateNetworkInterface",
-    "ec2:DescribeNetworkInterfaces",
-    "ec2:DeleteNetworkInterface",
-    "ec2:DescribeSecurityGroups",
+    "logs:PutLogEvents"
   ]
   names = [
-    "lambda_layer_name"
+    "python_layer"
   ]
-  filenames = [
-    {
-      "input"  = "./../../../lambda_function_payload",
-      "output" = "lambda_function_payload.zip",
-    }
-  ]
+  layer_filename = "./../../lambda/packages/Python3-lambda.zip"
   compatible_runtimes = [
-    ["nodejs8.10"]
+    ["python3.8"]
   ]
 
   statement_ids = [
-    "AllowExecutionFromSNS"
+    "AllowExecutionFromCloudWatch"
   ]
   actions = [
     "lambda:InvokeFunction"
   ]
   principals = [
-    "sns.amazonaws.com"
+    "events.amazonaws.com"
   ]
-  source_arns = [
-    "arn:aws:sns:eu-west-1:xxxxxxxxxxxxxx:sns-name"
-  ]
+  source_arns = [""]
   variables = {
     foo = "bar"
   }

@@ -107,54 +107,44 @@ Here are some examples of how you can use this module in your inventory structur
 ### Complete Function
 ```hcl
   module "lambda" {
-    source               = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.4"
-    name                 = "lambda"
-    application          = "clouddrove"
-    environment          = "test"
-    label_order          = ["environment", "name", "application"]
-    enabled              = true
-    filename             = "./../../../lambda_function_payload"
-    handler              = "index.handler"
-    runtime              = "nodejs8.10"
-    subnet_ids           = ["subnet-xxxxxxxxxxxxxx", "subnet-xxxxxxxxxxxxxx"]
-    security_group_ids   = ["sg-xxxxxxxxxxxxxx", "sg-xxxxxxxxxxxxxx"]
-    iam_actions          = [
-                            "logs:CreateLogStream",
-                            "logs:CreateLogGroup",
-                            "logs:PutLogEvents",
-                            "ec2:CreateNetworkInterface",
-                            "ec2:DescribeNetworkInterfaces",
-                            "ec2:DeleteNetworkInterface",
-                            "ec2:DescribeSecurityGroups",
-                           ]
-    names                = [
-                            "lambda_layer_name"
-                           ]
-    filenames            = [
-                            {
-                              "input"="./../../../lambda_function_payload",
-                              "output"="lambda_function_payload.zip",
-                            }
-                           ]
-    compatible_runtimes  = [
-                            ["nodejs8.10"]
-                           ]
+    source = "../../"
 
-    statement_ids        = [
-                            "AllowExecutionFromSNS"
-                           ]
-    actions              = [
-                            "lambda:InvokeFunction"
-                           ]
-    principals           = [
-                            "sns.amazonaws.com"
-                           ]
-    source_arns          = [
-                            "arn:aws:sns:eu-west-1:xxxxxxxxxxxxxx:test-sns-clouddrove"
-                           ]
-    variables            = {
-                             foo = "bar"
-                           }
+    name        = "lambda"
+    application = "clouddrove"
+    environment = "test"
+    label_order = ["environment", "name", "application"]
+    enabled     = true
+    timeout = 60
+
+    filename           = "./../../lambda/src"
+    handler            = "index.lambda_handler"
+    runtime            = "python3.8"
+    iam_actions = [
+      "logs:CreateLogStream",
+      "logs:CreateLogGroup",
+      "logs:PutLogEvents"
+    ]
+    names = [
+      "python_layer"
+    ]
+    layer_filename = "./../../lambda/packages/Python3-lambda.zip"
+    compatible_runtimes = [
+      ["python3.8"]
+    ]
+
+    statement_ids = [
+      "AllowExecutionFromCloudWatch"
+    ]
+    actions = [
+      "lambda:InvokeFunction"
+    ]
+    principals = [
+      "events.amazonaws.com"
+    ]
+    source_arns = [""]
+    variables = {
+      foo  = "bar"
+    }
   }
 ```
 
@@ -178,11 +168,11 @@ Here are some examples of how you can use this module in your inventory structur
 | environment | Environment \(e.g. `prod`, `dev`, `staging`\). | string | `""` | no |
 | event\_source\_tokens | The Event Source Token to validate. Used with Alexa Skills. | list | `<list>` | no |
 | filename | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | string | `""` | no |
-| filenames | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | list | `<list>` | no |
 | handler | The function entrypoint in your code. | string | n/a | yes |
 | iam\_actions | The actions for Iam Role Policy. | list | `<list>` | no |
 | kms\_key\_arn | The ARN for the KMS encryption key. | string | `""` | no |
 | label\_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
+| layer\_filename | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | string | `""` | no |
 | layers | List of Lambda Layer Version ARNs \(maximum of 5\) to attach to your Lambda Function. | string | `""` | no |
 | license\_infos | License info for your Lambda Layer. See License Info. | list | `<list>` | no |
 | managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `"anmol@clouddrove.com"` | no |
