@@ -69,7 +69,7 @@ resource "aws_iam_role_policy_attachment" "default" {
 # Description : Terraform module to create Lambda layers resource on AWS.
 resource "aws_lambda_layer_version" "default" {
   count               = length(var.names) > 0 && var.enabled ? length(var.names) : 0
-  filename            = length(var.layer_filename) > 0 ? var.layer_filename : null
+  filename            = length(var.layer_filenames) > 0 ? element(var.layer_filenames, count.index) : null
   s3_bucket           = length(var.s3_buckets) > 0 ? element(var.s3_buckets, count.index) : null
   s3_key              = length(var.s3_keies) > 0 ? element(var.s3_keies, count.index) : null
   s3_object_version   = length(var.s3_object_versions) > 0 ? element(var.s3_object_versions, count.index) : null
@@ -77,7 +77,6 @@ resource "aws_lambda_layer_version" "default" {
   compatible_runtimes = element(var.compatible_runtimes, count.index)
   description         = length(var.descriptions) > 0 ? element(var.descriptions, count.index) : ""
   license_info        = length(var.license_infos) > 0 ? element(var.license_infos, count.index) : ""
-  source_code_hash    = length(var.layer_filename) > 0 ? filesha256(var.layer_filename) : ""
 }
 
 # Module      : Archive file

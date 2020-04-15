@@ -23,7 +23,7 @@ module "lambda" {
   names = [
     "python_layer"
   ]
-  layer_filename = "./../../lambda/packages/Python3-lambda.zip"
+  layer_filenames = ["./../../lambda/packages/Python3-lambda.zip"]
   compatible_runtimes = [
     ["python3.8"]
   ]
