@@ -127,7 +127,7 @@ Here are some examples of how you can use this module in your inventory structur
     names = [
       "python_layer"
     ]
-    layer_filename = "./../../lambda/packages/Python3-lambda.zip"
+    layer_filenames = ["./../../lambda/packages/Python3-lambda.zip"]
     compatible_runtimes = [
       ["python3.8"]
     ]
@@ -172,7 +172,7 @@ Here are some examples of how you can use this module in your inventory structur
 | iam\_actions | The actions for Iam Role Policy. | list | `<list>` | no |
 | kms\_key\_arn | The ARN for the KMS encryption key. | string | `""` | no |
 | label\_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
-| layer\_filename | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | string | `""` | no |
+| layer\_filenames | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | list | `<list>` | no |
 | layers | List of Lambda Layer Version ARNs \(maximum of 5\) to attach to your Lambda Function. | string | `""` | no |
 | license\_infos | License info for your Lambda Layer. See License Info. | list | `<list>` | no |
 | managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `"anmol@clouddrove.com"` | no |

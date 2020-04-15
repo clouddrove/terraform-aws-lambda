@@ -127,9 +127,9 @@ variable "kms_key_arn" {
   description = "The ARN for the KMS encryption key."
 }
 
-variable "layer_filename" {
-  type        = string
-  default     = ""
+variable "layer_filenames" {
+  type        = list
+  default     = []
   description = "The path to the function's deployment package within the local filesystem. If defined, The s3_-prefixed options cannot be used."
 }
 
