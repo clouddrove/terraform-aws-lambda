@@ -6,7 +6,7 @@
 #              for resources. You can use terraform-labels to implement a strict naming
 #              convention.
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.12.0"
+  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.13.0"
 
   name        = var.name
   application = var.application
@@ -110,6 +110,7 @@ resource "aws_lambda_function" "default" {
   kms_key_arn                    = var.kms_key_arn
   source_code_hash               = var.filename != null ? filesha256(format("%s.zip", module.labels.id)) : ""
   tags                           = module.labels.tags
+
   vpc_config {
     subnet_ids         = var.subnet_ids
     security_group_ids = var.security_group_ids

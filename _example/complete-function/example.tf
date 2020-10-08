@@ -5,20 +5,22 @@ provider "aws" {
 module "lambda" {
   source = "../../"
 
-  name        = "lambda"
-  application = "clouddrove"
-  environment = "test"
-  label_order = ["environment", "name", "application"]
-  enabled     = true
-  timeout     = 60
+  name                       = "lambda"
+  application                = "clouddrove"
+  environment                = "test"
+  label_order                = ["environment", "name", "application"]
+  enabled                    = true
+  enabled_cloudwatch_logging = true
+  timeout                    = 60
 
-  filename = "./../../lambda/src"
+  filename = "../../lambda_packages"
   handler  = "index.lambda_handler"
   runtime  = "python3.8"
   iam_actions = [
     "logs:CreateLogStream",
     "logs:CreateLogGroup",
     "logs:PutLogEvents"
+
   ]
   names = [
     "python_layer"
