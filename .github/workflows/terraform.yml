@@ -28,37 +28,37 @@ jobs:
         uses: 'clouddrove/github-actions@v4.0'
         with:
           actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example/basic-s3_function
+          tf_actions_working_dir: ./_example/basic-s3-function
 
       - name: 'Terraform validate basic-s3_example'
         uses: 'clouddrove/github-actions@v4.0'
         with:
           actions_subcommand: 'validate'
-          tf_actions_working_dir: ./_example/basic-s3_function
+          tf_actions_working_dir: ./_example/basic-s3-function
 
       - name: 'Terraform init basic_function'
         uses: 'clouddrove/github-actions@v4.0'
         with:
           actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example/basic_function
+          tf_actions_working_dir: ./_example/basic-function
 
       - name: 'Terraform validate basic_function'
         uses: 'clouddrove/github-actions@v4.0'
         with:
           actions_subcommand: 'validate'
-          tf_actions_working_dir: ./_example/basic_function
+          tf_actions_working_dir: ./_example/basic-function
 
       - name: 'Terraform init complete_example'
         uses: 'clouddrove/github-actions@v4.0'
         with:
           actions_subcommand: 'init'
-          tf_actions_working_dir: ./_example/complete_function
+          tf_actions_working_dir: ./_example/complete-function
 
       - name: 'Terraform validate complete_example'
         uses: 'clouddrove/github-actions@v4.0'
         with:
           actions_subcommand: 'validate'
-          tf_actions_working_dir: ./_example/complete_function
+          tf_actions_working_dir: ./_example/complete-function
 
       - name: 'Slack Notification'
         uses: clouddrove/action-slack@v2
