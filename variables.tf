@@ -56,6 +56,12 @@ variable "enabled" {
   description = "Whether to create lambda function."
 }
 
+variable "enabled_cloudwatch_logging" {
+  type        = bool
+  default     = false
+  description = "Whether to create create efs file system."
+}
+
 variable "filename" {
   default     = null
   description = "The path to the function's deployment package within the local filesystem. If defined, The s3_-prefixed options cannot be used."

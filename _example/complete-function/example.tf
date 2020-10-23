@@ -12,13 +12,14 @@ module "lambda" {
   enabled     = true
   timeout     = 60
 
-  filename = "./../../lambda/src"
+  filename = "../../lambda_packages"
   handler  = "index.lambda_handler"
   runtime  = "python3.8"
   iam_actions = [
     "logs:CreateLogStream",
     "logs:CreateLogGroup",
     "logs:PutLogEvents"
+
   ]
   names = [
     "python_layer"
