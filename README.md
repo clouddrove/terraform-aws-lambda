@@ -7,14 +7,14 @@
     Terraform AWS Lambda
 </h1>
 
-<p align="center" style="font-size: 1.2rem;">
+<p align="center" style="font-size: 1.2rem;"> 
     Terraform module to create Lambda resource on AWS for create lambda function.
      </p>
 
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v0.12-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v0.13-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
@@ -38,7 +38,7 @@
 <hr>
 
 
-We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure.
+We eat, drink, sleep and most importantly love **DevOps**. We are working towards strategies for standardizing architecture while ensuring security for the infrastructure. We are strong believer of the philosophy <b>Bigger problems are always solved by breaking them into smaller manageable problems</b>. Resonating with microservices architecture, it is considered best-practice to run database, cluster, storage in smaller <b>connected yet manageable pieces</b> within the infrastructure. 
 
 This module is basically combination of [Terraform open source](https://www.terraform.io/) and includes automatation tests and examples. It also helps to create and improve your infrastructure with minimalistic code instead of maintaining the whole infrastructure code yourself.
 
@@ -49,9 +49,9 @@ We have [*fifty plus terraform modules*][terraform_modules]. A few of them are c
 
 ## Prerequisites
 
-This module has a few dependencies:
+This module has a few dependencies: 
 
-- [Terraform 0.12](https://learn.hashicorp.com/terraform/getting-started/install.html)
+- [Terraform 0.13](https://learn.hashicorp.com/terraform/getting-started/install.html)
 - [Go](https://golang.org/doc/install)
 - [github.com/stretchr/testify/assert](https://github.com/stretchr/testify)
 - [github.com/gruntwork-io/terratest/modules/terraform](https://github.com/gruntwork-io/terratest)
@@ -72,7 +72,8 @@ Here are some examples of how you can use this module in your inventory structur
 ### Basic Function
 ```hcl
   module "lambda" {
-    source         = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+    source        = "clouddrove/lambda/aws"
+    version       = "0.13.0"
     name           = "lambda"
     application    = "clouddrove"
     environment    = "test"
@@ -89,7 +90,8 @@ Here are some examples of how you can use this module in your inventory structur
 ### Basic S3 Function
 ```hcl
   module "lambda" {
-    source        = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+    source        = "clouddrove/lambda/aws"
+    version       = "0.13.0"
     name          = "lambda"
     application   = "clouddrove"
     environment   = "test"
@@ -107,7 +109,8 @@ Here are some examples of how you can use this module in your inventory structur
 ### Complete Function
 ```hcl
   module "lambda" {
-    source = "git::https://github.com/clouddrove/terraform-aws-lambda.git?ref=tags/0.12.5"
+    source        = "clouddrove/lambda/aws"
+    version       = "0.13.0"
 
     name        = "lambda"
     application = "clouddrove"
@@ -156,61 +159,62 @@ Here are some examples of how you can use this module in your inventory structur
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| actions | The AWS Lambda action you want to allow in this statement. \(e.g. lambda:InvokeFunction\). | list | `<list>` | no |
-| application | Application \(e.g. `cd` or `clouddrove`\). | string | `""` | no |
-| attributes | Additional attributes \(e.g. `1`\). | list | `<list>` | no |
-| compatible\_runtimes | A list of Runtimes this layer is compatible with. Up to 5 runtimes can be specified. | list | `<list>` | no |
-| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | string | `"-"` | no |
-| description | Description of what your Lambda Function does. | string | `""` | no |
-| descriptions | Description of what your Lambda Layer does. | list | `<list>` | no |
-| enabled | Whether to create lambda function. | bool | `"false"` | no |
-| environment | Environment \(e.g. `prod`, `dev`, `staging`\). | string | `""` | no |
-| event\_source\_tokens | The Event Source Token to validate. Used with Alexa Skills. | list | `<list>` | no |
-| filename | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | string | `""` | no |
-| handler | The function entrypoint in your code. | string | n/a | yes |
-| iam\_actions | The actions for Iam Role Policy. | list | `<list>` | no |
-| kms\_key\_arn | The ARN for the KMS encryption key. | string | `""` | no |
-| label\_order | Label order, e.g. `name`,`application`. | list | `<list>` | no |
-| layer\_filenames | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | list | `<list>` | no |
-| layers | List of Lambda Layer Version ARNs \(maximum of 5\) to attach to your Lambda Function. | string | `""` | no |
-| license\_infos | License info for your Lambda Layer. See License Info. | list | `<list>` | no |
-| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | string | `"anmol@clouddrove.com"` | no |
-| memory\_size | Amount of memory in MB your Lambda Function can use at runtime. Defaults to 128. | number | `"128"` | no |
-| name | Name  \(e.g. `app` or `cluster`\). | string | `""` | no |
-| names | A unique name for your Lambda Layer. | list | `<list>` | no |
-| principals | The principal who is getting this permission. e.g. s3.amazonaws.com, an AWS account ID, or any valid AWS service principal such as events.amazonaws.com or sns.amazonaws.com. | list | `<list>` | no |
-| publish | Whether to publish creation/change as new Lambda Function Version. Defaults to false. | bool | `"false"` | no |
-| qualifiers | Query parameter to specify function version or alias name. The permission will then apply to the specific qualified ARN. e.g. arn:aws:lambda:aws-region:acct-id:function:function-name:2 | list | `<list>` | no |
-| reserved\_concurrent\_executions | The amount of reserved concurrent executions for this lambda function. A value of 0 disables lambda from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1. | number | `"-1"` | no |
-| runtime | Runtimes. | string | n/a | yes |
-| s3\_bucket | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | string | `""` | no |
-| s3\_buckets | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | list | `<list>` | no |
-| s3\_keies | The S3 key of an object containing the function's deployment package. Conflicts with filename. | list | `<list>` | no |
-| s3\_key | The S3 key of an object containing the function's deployment package. Conflicts with filename. | string | `""` | no |
-| s3\_object\_version | The object version containing the function's deployment package. Conflicts with filename. | string | `""` | no |
-| s3\_object\_versions | The object version containing the function's deployment package. Conflicts with filename. | list | `<list>` | no |
-| security\_group\_ids | Security group ids for vpc config. | list | `<list>` | no |
-| source\_accounts | This parameter is used for S3 and SES. The AWS account ID \(without a hyphen\) of the source owner. | list | `<list>` | no |
-| source\_arns | When granting Amazon S3 or CloudWatch Events permission to invoke your function, you should specify this field with the Amazon Resource Name \(ARN\) for the S3 Bucket or CloudWatch Events Rule as its value. This ensures that only events generated from the specified bucket or rule can invoke the function. | list | `<list>` | no |
-| statement\_ids | A unique statement identifier. By default generated by Terraform. | list | `<list>` | no |
-| subnet\_ids | Subnet ids for vpc config. | list | `<list>` | no |
-| tags | Additional tags \(e.g. map\(`BusinessUnit`,`XYZ`\). | map | `<map>` | no |
-| timeout | The amount of time your Lambda Function has to run in seconds. Defaults to 3. | number | `"3"` | no |
-| variables | A map that defines environment variables for the Lambda function. | map | `<map>` | no |
+|------|-------------|------|---------|:--------:|
+| actions | The AWS Lambda action you want to allow in this statement. (e.g. lambda:InvokeFunction). | `list` | `[]` | no |
+| application | Application (e.g. `cd` or `clouddrove`). | `string` | `""` | no |
+| attributes | Additional attributes (e.g. `1`). | `list` | `[]` | no |
+| compatible\_runtimes | A list of Runtimes this layer is compatible with. Up to 5 runtimes can be specified. | `list` | `[]` | no |
+| delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
+| description | Description of what your Lambda Function does. | `string` | `""` | no |
+| descriptions | Description of what your Lambda Layer does. | `list` | `[]` | no |
+| enabled | Whether to create lambda function. | `bool` | `false` | no |
+| enabled\_cloudwatch\_logging | Whether to create create efs file system. | `bool` | `false` | no |
+| environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
+| event\_source\_tokens | The Event Source Token to validate. Used with Alexa Skills. | `list` | `[]` | no |
+| filename | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | `any` | `null` | no |
+| handler | The function entrypoint in your code. | `string` | n/a | yes |
+| iam\_actions | The actions for Iam Role Policy. | `list` | <pre>[<br>  "logs:CreateLogStream",<br>  "logs:CreateLogGroup",<br>  "logs:PutLogEvents"<br>]</pre> | no |
+| kms\_key\_arn | The ARN for the KMS encryption key. | `string` | `""` | no |
+| label\_order | Label order, e.g. `name`,`application`. | `list` | `[]` | no |
+| layer\_filenames | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | `list` | `[]` | no |
+| layers | List of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda Function. | `any` | `null` | no |
+| license\_infos | License info for your Lambda Layer. See License Info. | `list` | `[]` | no |
+| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | `string` | `"anmol@clouddrove.com"` | no |
+| memory\_size | Amount of memory in MB your Lambda Function can use at runtime. Defaults to 128. | `number` | `128` | no |
+| name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
+| names | A unique name for your Lambda Layer. | `list` | `[]` | no |
+| principals | The principal who is getting this permission. e.g. s3.amazonaws.com, an AWS account ID, or any valid AWS service principal such as events.amazonaws.com or sns.amazonaws.com. | `list` | `[]` | no |
+| publish | Whether to publish creation/change as new Lambda Function Version. Defaults to false. | `bool` | `false` | no |
+| qualifiers | Query parameter to specify function version or alias name. The permission will then apply to the specific qualified ARN. e.g. arn:aws:lambda:aws-region:acct-id:function:function-name:2 | `list` | `[]` | no |
+| reserved\_concurrent\_executions | The amount of reserved concurrent executions for this lambda function. A value of 0 disables lambda from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1. | `number` | `-1` | no |
+| runtime | Runtimes. | `string` | n/a | yes |
+| s3\_bucket | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | `any` | `null` | no |
+| s3\_buckets | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | `list` | `[]` | no |
+| s3\_keies | The S3 key of an object containing the function's deployment package. Conflicts with filename. | `list` | `[]` | no |
+| s3\_key | The S3 key of an object containing the function's deployment package. Conflicts with filename. | `any` | `null` | no |
+| s3\_object\_version | The object version containing the function's deployment package. Conflicts with filename. | `any` | `null` | no |
+| s3\_object\_versions | The object version containing the function's deployment package. Conflicts with filename. | `list` | `[]` | no |
+| security\_group\_ids | Security group ids for vpc config. | `list` | `[]` | no |
+| source\_accounts | This parameter is used for S3 and SES. The AWS account ID (without a hyphen) of the source owner. | `list` | `[]` | no |
+| source\_arns | When granting Amazon S3 or CloudWatch Events permission to invoke your function, you should specify this field with the Amazon Resource Name (ARN) for the S3 Bucket or CloudWatch Events Rule as its value. This ensures that only events generated from the specified bucket or rule can invoke the function. | `list` | `[]` | no |
+| statement\_ids | A unique statement identifier. By default generated by Terraform. | `list` | `[]` | no |
+| subnet\_ids | Subnet ids for vpc config. | `list` | `[]` | no |
+| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map` | `{}` | no |
+| timeout | The amount of time your Lambda Function has to run in seconds. Defaults to 3. | `number` | `3` | no |
+| variables | A map that defines environment variables for the Lambda function. | `map` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| arn | The Amazon Resource Name \(ARN\) identifying your Lambda Function. |
+| arn | The Amazon Resource Name (ARN) identifying your Lambda Function. |
 | tags | A mapping of tags to assign to the resource. |
 
 
 
 
 ## Testing
-In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system.
+In this module testing is performed with [terratest](https://github.com/gruntwork-io/terratest) and it creates a small piece of infrastructure, matches the output like ARN, ID and Tags name etc and destroy infrastructure in your AWS account. This testing is written in GO, so you need a [GO environment](https://golang.org/doc/install) in your system. 
 
 You need to run the following command in the testing folder:
 ```hcl
@@ -219,7 +223,7 @@ You need to run the following command in the testing folder:
 
 
 
-## Feedback
+## Feedback 
 If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-aws-lambda/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
 If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-aws-lambda)!
