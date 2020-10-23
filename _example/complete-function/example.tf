@@ -10,7 +10,6 @@ module "lambda" {
   environment                = "test"
   label_order                = ["environment", "name", "application"]
   enabled                    = true
-  enabled_cloudwatch_logging = true
   timeout                    = 60
 
   filename = "../../lambda_packages"
