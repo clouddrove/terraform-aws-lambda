@@ -5,12 +5,12 @@ provider "aws" {
 module "lambda" {
   source = "../../"
 
-  name                       = "lambda"
-  application                = "clouddrove"
-  environment                = "test"
-  label_order                = ["environment", "name", "application"]
-  enabled                    = true
-  timeout                    = 60
+  name        = "lambda"
+  application = "clouddrove"
+  environment = "test"
+  label_order = ["environment", "name", "application"]
+  enabled     = true
+  timeout     = 60
 
   filename = "../../lambda_packages"
   handler  = "index.lambda_handler"
