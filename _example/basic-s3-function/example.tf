@@ -6,9 +6,9 @@ module "lambda" {
   source = "../../"
 
   name        = "lambda"
-  application = "clouddrove"
+  repository  = "https://registry.terraform.io/modules/clouddrove/lambda/aws/0.14.0"
   environment = "test"
-  label_order = ["environment", "name", "application"]
+  label_order = ["name", "environment"]
   enabled     = true
 
   s3_bucket = "test-mysql-backups"
