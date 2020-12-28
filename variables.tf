@@ -206,14 +206,12 @@ variable "iam_actions" {
   type        = list(any)
   default     = ["logs:CreateLogStream", "logs:CreateLogGroup", "logs:PutLogEvents"]
   description = "The actions for Iam Role Policy."
-  sensitive   = true
 }
 
 variable "actions" {
   type        = list(any)
   default     = []
   description = "The AWS Lambda action you want to allow in this statement. (e.g. lambda:InvokeFunction)."
-  sensitive   = true
 }
 
 variable "principals" {
