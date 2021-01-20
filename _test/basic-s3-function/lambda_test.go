@@ -30,6 +30,6 @@ func Test(t *testing.T) {
 	Arn := strings.Join(terraform.OutputList(t, terraformOptions, "arn"),"")
 
 	// Check that we get back the outputs that we expect
-	assert.Equal(t, "test-lambda-clouddrove", Tags["Name"])
+	assert.Equal(t, "lambda-test", Tags["Name"])
 	assert.Contains(t, Arn, "arn:aws:lambda")
 }

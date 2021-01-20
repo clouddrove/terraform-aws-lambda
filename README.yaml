@@ -40,11 +40,10 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.13.0"
+      version       = "0.14.0"
       name           = "lambda"
-      application    = "clouddrove"
       environment    = "test"
-      label_order    = ["environment", "name", "application"]
+      label_order    = ["name","environment"]
       enabled        = true
       filename       = "./../../../lambda_function_payload"
       handler        = "index.handler"
@@ -58,11 +57,10 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.13.0"
+      version       = "0.14.0"
       name          = "lambda"
-      application   = "clouddrove"
       environment   = "test"
-      label_order   = ["environment", "name", "application"]
+      label_order   = ["name","environment"]
       enabled       = true
       s3_bucket     = "test-mysql-backups"
       s3_key        = "lambda_function_payload.zip"
@@ -77,12 +75,11 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.13.0"
+      version       = "0.14.0"
 
       name        = "lambda"
-      application = "clouddrove"
       environment = "test"
-      label_order = ["environment", "name", "application"]
+      label_order = ["name","environment"]
       enabled     = true
       timeout = 60
 
