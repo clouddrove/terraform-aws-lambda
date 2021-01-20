@@ -9,8 +9,8 @@ module "lambda" {
   environment = "test"
   label_order = ["name", "environment"]
 
-  enabled     = true
-  timeout     = 60
+  enabled  = true
+  timeout  = 60
   filename = "../../lambda_packages"
   handler  = "index.lambda_handler"
   runtime  = "python3.8"
