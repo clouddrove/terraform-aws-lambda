@@ -14,7 +14,7 @@
 <p align="center">
 
 <a href="https://www.terraform.io">
-  <img src="https://img.shields.io/badge/Terraform-v0.13-green" alt="Terraform">
+  <img src="https://img.shields.io/badge/Terraform-v0.14-green" alt="Terraform">
 </a>
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="Licence">
@@ -73,11 +73,10 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "lambda" {
     source        = "clouddrove/lambda/aws"
-    version       = "0.13.0"
+    version       = "0.14.0"
     name           = "lambda"
-    application    = "clouddrove"
     environment    = "test"
-    label_order    = ["environment", "name", "application"]
+    label_order    = ["name","environment"]
     enabled        = true
     filename       = "./../../../lambda_function_payload"
     handler        = "index.handler"
@@ -91,13 +90,12 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "lambda" {
     source        = "clouddrove/lambda/aws"
-    version       = "0.13.0"
+    version       = "0.14.0"
     name          = "lambda"
-    application   = "clouddrove"
     environment   = "test"
-    label_order   = ["environment", "name", "application"]
+    label_order   = ["name","environment"]
     enabled       = true
-    s3_bucket     = "test-mysql-backups"
+    s3_bucket     = "test-s3-backups"
     s3_key        = "lambda_function_payload.zip"
     handler       = "index.handler"
     runtime       = "nodejs8.10"
@@ -110,12 +108,11 @@ Here are some examples of how you can use this module in your inventory structur
 ```hcl
   module "lambda" {
     source        = "clouddrove/lambda/aws"
-    version       = "0.13.0"
+    version       = "0.14.0"
 
     name        = "lambda"
-    application = "clouddrove"
     environment = "test"
-    label_order = ["environment", "name", "application"]
+    label_order = ["name","environment"]
     enabled     = true
     timeout = 60
 
@@ -160,48 +157,48 @@ Here are some examples of how you can use this module in your inventory structur
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| actions | The AWS Lambda action you want to allow in this statement. (e.g. lambda:InvokeFunction). | `list` | `[]` | no |
-| application | Application (e.g. `cd` or `clouddrove`). | `string` | `""` | no |
-| attributes | Additional attributes (e.g. `1`). | `list` | `[]` | no |
-| compatible\_runtimes | A list of Runtimes this layer is compatible with. Up to 5 runtimes can be specified. | `list` | `[]` | no |
+| actions | The AWS Lambda action you want to allow in this statement. (e.g. lambda:InvokeFunction). | `list(any)` | `[]` | no |
+| attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
+| compatible\_runtimes | A list of Runtimes this layer is compatible with. Up to 5 runtimes can be specified. | `list(any)` | `[]` | no |
 | delimiter | Delimiter to be used between `organization`, `environment`, `name` and `attributes`. | `string` | `"-"` | no |
 | description | Description of what your Lambda Function does. | `string` | `""` | no |
-| descriptions | Description of what your Lambda Layer does. | `list` | `[]` | no |
+| descriptions | Description of what your Lambda Layer does. | `list(any)` | `[]` | no |
 | enabled | Whether to create lambda function. | `bool` | `false` | no |
 | enabled\_cloudwatch\_logging | Whether to create create efs file system. | `bool` | `false` | no |
 | environment | Environment (e.g. `prod`, `dev`, `staging`). | `string` | `""` | no |
-| event\_source\_tokens | The Event Source Token to validate. Used with Alexa Skills. | `list` | `[]` | no |
+| event\_source\_tokens | The Event Source Token to validate. Used with Alexa Skills. | `list(any)` | `[]` | no |
 | filename | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | `any` | `null` | no |
 | handler | The function entrypoint in your code. | `string` | n/a | yes |
-| iam\_actions | The actions for Iam Role Policy. | `list` | <pre>[<br>  "logs:CreateLogStream",<br>  "logs:CreateLogGroup",<br>  "logs:PutLogEvents"<br>]</pre> | no |
+| iam\_actions | The actions for Iam Role Policy. | `list(any)` | <pre>[<br>  "logs:CreateLogStream",<br>  "logs:CreateLogGroup",<br>  "logs:PutLogEvents"<br>]</pre> | no |
 | kms\_key\_arn | The ARN for the KMS encryption key. | `string` | `""` | no |
-| label\_order | Label order, e.g. `name`,`application`. | `list` | `[]` | no |
-| layer\_filenames | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | `list` | `[]` | no |
+| label\_order | Label order, e.g. `name`,`application`. | `list(any)` | `[]` | no |
+| layer\_filenames | The path to the function's deployment package within the local filesystem. If defined, The s3\_-prefixed options cannot be used. | `list(any)` | `[]` | no |
 | layers | List of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda Function. | `any` | `null` | no |
-| license\_infos | License info for your Lambda Layer. See License Info. | `list` | `[]` | no |
-| managedby | ManagedBy, eg 'CloudDrove' or 'AnmolNagpal'. | `string` | `"anmol@clouddrove.com"` | no |
+| license\_infos | License info for your Lambda Layer. See License Info. | `list(any)` | `[]` | no |
+| managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
 | memory\_size | Amount of memory in MB your Lambda Function can use at runtime. Defaults to 128. | `number` | `128` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
-| names | A unique name for your Lambda Layer. | `list` | `[]` | no |
-| principals | The principal who is getting this permission. e.g. s3.amazonaws.com, an AWS account ID, or any valid AWS service principal such as events.amazonaws.com or sns.amazonaws.com. | `list` | `[]` | no |
+| names | A unique name for your Lambda Layer. | `list(any)` | `[]` | no |
+| principals | The principal who is getting this permission. e.g. s3.amazonaws.com, an AWS account ID, or any valid AWS service principal such as events.amazonaws.com or sns.amazonaws.com. | `list(any)` | `[]` | no |
 | publish | Whether to publish creation/change as new Lambda Function Version. Defaults to false. | `bool` | `false` | no |
-| qualifiers | Query parameter to specify function version or alias name. The permission will then apply to the specific qualified ARN. e.g. arn:aws:lambda:aws-region:acct-id:function:function-name:2 | `list` | `[]` | no |
+| qualifiers | Query parameter to specify function version or alias name. The permission will then apply to the specific qualified ARN. e.g. arn:aws:lambda:aws-region:acct-id:function:function-name:2 | `list(any)` | `[]` | no |
+| repository | Terraform current module repo | `string` | `""` | no |
 | reserved\_concurrent\_executions | The amount of reserved concurrent executions for this lambda function. A value of 0 disables lambda from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1. | `number` | `-1` | no |
 | runtime | Runtimes. | `string` | n/a | yes |
 | s3\_bucket | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | `any` | `null` | no |
-| s3\_buckets | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | `list` | `[]` | no |
-| s3\_keies | The S3 key of an object containing the function's deployment package. Conflicts with filename. | `list` | `[]` | no |
+| s3\_buckets | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | `list(any)` | `[]` | no |
+| s3\_keies | The S3 key of an object containing the function's deployment package. Conflicts with filename. | `list(any)` | `[]` | no |
 | s3\_key | The S3 key of an object containing the function's deployment package. Conflicts with filename. | `any` | `null` | no |
 | s3\_object\_version | The object version containing the function's deployment package. Conflicts with filename. | `any` | `null` | no |
-| s3\_object\_versions | The object version containing the function's deployment package. Conflicts with filename. | `list` | `[]` | no |
-| security\_group\_ids | Security group ids for vpc config. | `list` | `[]` | no |
-| source\_accounts | This parameter is used for S3 and SES. The AWS account ID (without a hyphen) of the source owner. | `list` | `[]` | no |
-| source\_arns | When granting Amazon S3 or CloudWatch Events permission to invoke your function, you should specify this field with the Amazon Resource Name (ARN) for the S3 Bucket or CloudWatch Events Rule as its value. This ensures that only events generated from the specified bucket or rule can invoke the function. | `list` | `[]` | no |
-| statement\_ids | A unique statement identifier. By default generated by Terraform. | `list` | `[]` | no |
-| subnet\_ids | Subnet ids for vpc config. | `list` | `[]` | no |
-| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map` | `{}` | no |
+| s3\_object\_versions | The object version containing the function's deployment package. Conflicts with filename. | `list(any)` | `[]` | no |
+| security\_group\_ids | Security group ids for vpc config. | `list(any)` | `[]` | no |
+| source\_accounts | This parameter is used for S3 and SES. The AWS account ID (without a hyphen) of the source owner. | `list(any)` | `[]` | no |
+| source\_arns | When granting Amazon S3 or CloudWatch Events permission to invoke your function, you should specify this field with the Amazon Resource Name (ARN) for the S3 Bucket or CloudWatch Events Rule as its value. This ensures that only events generated from the specified bucket or rule can invoke the function. | `list(any)` | `[]` | no |
+| statement\_ids | A unique statement identifier. By default generated by Terraform. | `list(any)` | `[]` | no |
+| subnet\_ids | Subnet ids for vpc config. | `list(any)` | `[]` | no |
+| tags | Additional tags (e.g. map(`BusinessUnit`,`XYZ`). | `map(any)` | `{}` | no |
 | timeout | The amount of time your Lambda Function has to run in seconds. Defaults to 3. | `number` | `3` | no |
-| variables | A map that defines environment variables for the Lambda function. | `map` | `{}` | no |
+| variables | A map that defines environment variables for the Lambda function. | `map(any)` | `{}` | no |
 
 ## Outputs
 
