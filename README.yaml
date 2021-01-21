@@ -16,7 +16,7 @@ github_repo: clouddrove/terraform-aws-lambda
 # Badges to display
 badges:
   - name: "Terraform"
-    image: "https://img.shields.io/badge/Terraform-v0.13-green"
+    image: "https://img.shields.io/badge/Terraform-v0.14-green"
     url: "https://www.terraform.io"
   - name: "Licence"
     image: "https://img.shields.io/badge/License-MIT-blue.svg"
@@ -40,11 +40,10 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.13.0"
+      version       = "0.14.0"
       name           = "lambda"
-      application    = "clouddrove"
       environment    = "test"
-      label_order    = ["environment", "name", "application"]
+      label_order    = ["name","environment"]
       enabled        = true
       filename       = "./../../../lambda_function_payload"
       handler        = "index.handler"
@@ -58,13 +57,12 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.13.0"
+      version       = "0.14.0"
       name          = "lambda"
-      application   = "clouddrove"
       environment   = "test"
-      label_order   = ["environment", "name", "application"]
+      label_order   = ["name","environment"]
       enabled       = true
-      s3_bucket     = "test-mysql-backups"
+      s3_bucket     = "test-s3-backups"
       s3_key        = "lambda_function_payload.zip"
       handler       = "index.handler"
       runtime       = "nodejs8.10"
@@ -77,12 +75,11 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.13.0"
+      version       = "0.14.0"
 
       name        = "lambda"
-      application = "clouddrove"
       environment = "test"
-      label_order = ["environment", "name", "application"]
+      label_order = ["name","environment"]
       enabled     = true
       timeout = 60
 

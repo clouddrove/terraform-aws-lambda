@@ -1,5 +1,5 @@
 # Module      : Lambda
-# Description : Terraform module to create Lambda resource on AWS for managing queue.
+# Description : Terraform Lambda function module outputs.
 output "arn" {
   value       = join("", aws_lambda_function.default.*.arn)
   description = "The Amazon Resource Name (ARN) identifying your Lambda Function."

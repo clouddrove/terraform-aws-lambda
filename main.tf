@@ -1,17 +1,19 @@
-## Managed By : CloudDrove
-## Copyright @ CloudDrove. All Right Reserved.
+# Managed By : CloudDrove
+# Description : Terraform module to create Iam role resource on AWS for lambda.
+# Copyright @ CloudDrove. All Right Reserved.
 
 #Module      : label
 #Description : This terraform module is designed to generate consistent label names and tags
 #              for resources. You can use terraform-labels to implement a strict naming
 #              convention.
 module "labels" {
-  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.13.0"
+  source = "git::https://github.com/clouddrove/terraform-labels.git?ref=tags/0.14.0"
 
   name        = var.name
-  application = var.application
+  repository  = var.repository
   environment = var.environment
   managedby   = var.managedby
+  attributes  = var.attributes
   label_order = var.label_order
 }
 
@@ -45,8 +47,7 @@ resource "aws_iam_policy" "default" {
   name        = format("%s-logging", module.labels.id)
   path        = "/"
   description = "IAM policy for logging from a lambda"
-
-  policy = data.aws_iam_policy_document.default.json
+  policy      = data.aws_iam_policy_document.default.json
 }
 
 data "aws_iam_policy_document" "default" {
@@ -60,7 +61,8 @@ data "aws_iam_policy_document" "default" {
 # Module      : Iam Role Policy Attachment
 # Description : Terraform module to attach Iam policy with role resource on AWS for lambda.
 resource "aws_iam_role_policy_attachment" "default" {
-  count      = var.enabled ? 1 : 0
+  count = var.enabled ? 1 : 0
+
   role       = join("", aws_iam_role.default.*.name)
   policy_arn = join("", aws_iam_policy.default.*.arn)
 }
@@ -82,7 +84,8 @@ resource "aws_lambda_layer_version" "default" {
 # Module      : Archive file
 # Description : Terraform module to zip a directory.
 data "archive_file" "default" {
-  count       = var.enabled && var.filename != null ? 1 : 0
+  count = var.enabled && var.filename != null ? 1 : 0
+
   type        = "zip"
   source_dir  = var.filename
   output_path = format("%s.zip", module.labels.id)
@@ -132,7 +135,8 @@ resource "aws_lambda_function" "default" {
 # Description : Terraform module to create Lambda permission resource on AWS to create
 #               trigger for function.
 resource "aws_lambda_permission" "default" {
-  count              = length(var.actions) > 0 && var.enabled ? length(var.actions) : 0
+  count = length(var.actions) > 0 && var.enabled ? length(var.actions) : 0
+
   statement_id       = length(var.statement_ids) > 0 ? element(var.statement_ids, count.index) : ""
   event_source_token = length(var.event_source_tokens) > 0 ? element(var.event_source_tokens, count.index) : null
   action             = element(var.actions, count.index)
