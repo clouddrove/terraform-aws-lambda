@@ -65,6 +65,26 @@ resource "aws_iam_role_policy_attachment" "default" {
   policy_arn = join("", aws_iam_policy.default.*.arn)
 }
 
+data "aws_iam_policy" "tracing" {
+  count = var.enabled && var.attach_tracing_policy ? 1 : 0
+  arn   = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+}
+
+resource "aws_iam_policy" "tracing" {
+  count = var.enabled && var.attach_tracing_policy ? 1 : 0
+
+  path   = "/"
+  policy = data.aws_iam_policy.tracing[0].policy
+  tags   = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "tracing" {
+  count = var.enabled && var.attach_tracing_policy ? 1 : 0
+
+  role       = join("", aws_iam_role.default.*.name)
+  policy_arn = aws_iam_policy.tracing[0].arn
+}
+
 # Module      : Lambda layers
 # Description : Terraform module to create Lambda layers resource on AWS.
 resource "aws_lambda_layer_version" "default" {
