@@ -50,7 +50,7 @@ resource "aws_iam_policy" "default" {
   description = "IAM policy for logging from a lambda"
   policy      = data.aws_iam_policy_document.default.json
 }
-
+#tfsec:ignore:aws-iam-no-policy-wildcards
 data "aws_iam_policy_document" "default" {
   statement {
     actions   = var.iam_actions
