@@ -115,13 +115,30 @@ resource "aws_lambda_function" "default" {
   source_code_hash               = var.filename != null ? filesha256(format("%s.zip", module.labels.id)) : ""
   tags                           = module.labels.tags
 
-  vpc_config {
-    subnet_ids         = var.subnet_ids
-    security_group_ids = var.security_group_ids
+  dynamic "image_config" {
+    for_each = length(var.image_config_entry_point) > 0 || length(var.image_config_command) > 0 || var.image_config_working_directory != null ? [true] : []
+    content {
+      entry_point       = var.image_config_entry_point
+      command           = var.image_config_command
+      working_directory = var.image_config_working_directory
+    }
   }
-  environment {
-    variables = var.variables
+
+ dynamic "vpc_config" {
+    for_each = var.subnet_ids != null && var.security_group_ids != null ? [true] : []
+    content {
+      security_group_ids = var.security_group_ids
+      subnet_ids         = var.subnet_ids
+    }
   }
+
+dynamic "environment" {
+    for_each = length(keys(var.variables)) == 0 ? [] : [true]
+    content {
+      variables = var.variables
+    }
+  }
+
   lifecycle {
     # Ignore tags added by kubernetes
     ignore_changes = [
