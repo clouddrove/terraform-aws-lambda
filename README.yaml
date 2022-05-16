@@ -8,7 +8,7 @@
 name: Terraform AWS Lambda
 
 # License of this project
-license: "MIT"
+license: "APACHE"
 
 # Canonical GitHub repo
 github_repo: clouddrove/terraform-aws-lambda
@@ -45,7 +45,7 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.15.0"
+      version       = "1.0.1"
       name           = "lambda"
       environment    = "test"
       label_order    = ["name","environment"]
@@ -62,7 +62,7 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.15.0"
+      version       = "1.0.1"
       name          = "lambda"
       environment   = "test"
       label_order   = ["name","environment"]
@@ -80,7 +80,7 @@ usage: |-
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "0.15.0"
+      version       = "1.0.1"
 
       name        = "lambda"
       environment = "test"
