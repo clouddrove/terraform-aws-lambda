@@ -246,3 +246,21 @@ variable "variables" {
   default     = {}
   description = "A map that defines environment variables for the Lambda function."
 }
+
+variable "image_config_entry_point" {
+  type        = list(string)
+  default     = []
+  description = "The ENTRYPOINT for the docker image"
+}
+
+variable "image_config_command" {
+  type        = list(string)
+  default     = []
+  description = "The CMD for the docker image"
+}
+
+variable "image_config_working_directory" {
+  type        = string
+  default     = null
+  description = "The working directory for the docker image"
+}
