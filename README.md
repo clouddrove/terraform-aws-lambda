@@ -192,7 +192,7 @@ Here are some examples of how you can use this module in your inventory structur
 | publish | Whether to publish creation/change as new Lambda Function Version. Defaults to false. | `bool` | `false` | no |
 | qualifiers | Query parameter to specify function version or alias name. The permission will then apply to the specific qualified ARN. e.g. arn:aws:lambda:aws-region:acct-id:function:function-name:2 | `list(any)` | `[]` | no |
 | repository | Terraform current module repo | `string` | `"https://github.com/clouddrove/terraform-aws-lambda"` | no |
-| reserved\_concurrent\_executions | The amount of reserved concurrent executions for this lambda function. A value of 0 disables lambda from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1. | `number` | `-1` | no |
+| reserved\_concurrent\_executions | The amount of reserved concurrent executions for this lambda function. A value of 0 disables lambda from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1. | `number` | `500` | no |
 | runtime | Runtimes. | `string` | n/a | yes |
 | s3\_bucket | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | `any` | `null` | no |
 | s3\_buckets | The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function. | `list(any)` | `[]` | no |
