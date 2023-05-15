@@ -117,7 +117,7 @@ variable "runtime" {
 
 variable "reserved_concurrent_executions" {
   type        = number
-  default     = 500
+  default     = 90
   description = "The amount of reserved concurrent executions for this lambda function. A value of 0 disables lambda from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1."
 }
 
