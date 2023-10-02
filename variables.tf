@@ -50,7 +50,7 @@ variable "managedby" {
 
 # Module      : Lambda function
 # Description : Terraform Lambda function module variables.
-variable "enabled" {
+variable "enable" {
   type        = bool
   default     = false
   description = "Whether to create lambda function."
@@ -263,4 +263,130 @@ variable "image_config_working_directory" {
   type        = string
   default     = null
   description = "The working directory for the docker image"
+}
+
+variable "enable_key_rotation" {
+  type        = bool
+  default     = true
+  description = "Specifies whether key rotation is enabled. Defaults to true(security best practice)"
+}
+
+variable "kms_key_deletion_window" {
+  type        = number
+  default     = 10
+  description = "KMS Key deletion window in days."
+}
+
+variable "enable_kms" {
+  type        = bool
+  default     = true
+  description = "Flag to control creation of kms key for lambda encryption"
+}
+
+variable "create_iam_role" {
+  type        = bool
+  default     = true
+  description = "Flag to control creation of iam role and its related resources."
+}
+
+variable "source_file" {
+  type        = string
+  default     = null
+  description = "Path of source file that is required to be converted in `.zip` file"
+}
+
+variable "enable_source_code_hash" {
+  type        = bool
+  default     = false
+  description = "Whether to ignore changes to the function's source code hash. Set to true if you manage infrastructure and code deployments separately."
+}
+
+variable "skip_destroy" {
+  type        = bool
+  default     = false
+  description = "Whether to retain the old version of a previously deployed Lambda Layer."
+}
+
+variable "compatible_architectures" {
+  type        = list(set(string))
+  default     = null
+  description = "List of Architectures lambda layer is compatible with. Currently x86_64 and arm64 can be specified."
+}
+
+variable "create_layers" {
+  type        = bool
+  default     = true
+  description = "Flag to control creation of lambda layers."
+}
+
+variable "snap_start" {
+  type        = bool
+  default     = false
+  description = "(Optional) Snap start settings for low-latency startups"
+}
+
+variable "dead_letter_target_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of an SNS topic or SQS queue to notify when an invocation fails."
+}
+
+variable "tracing_mode" {
+  type        = string
+  default     = null
+  description = "Tracing mode of the Lambda Function. Valid value can be either PassThrough or Active."
+}
+
+variable "file_system_local_mount_path" {
+  type        = string
+  default     = null
+  description = "The path where the function can access the file system, starting with /mnt/."
+}
+
+variable "file_system_arn" {
+  type        = string
+  default     = null
+  description = "The Amazon Resource Name (ARN) of the Amazon EFS Access Point that provides access to the file system."
+}
+
+variable "ephemeral_storage_size" {
+  type        = number
+  default     = 512
+  description = "Amount of ephemeral storage (/tmp) in MB your Lambda Function can use at runtime. Valid value between 512 MB to 10,240 MB (10 GB)."
+}
+
+variable "code_signing_config_arn" {
+  type        = string
+  default     = null
+  description = "Amazon Resource Name (ARN) for a Code Signing Configuration"
+}
+
+variable "architectures" {
+  type        = list(string)
+  default     = null
+  description = "Instruction set architecture for your Lambda function. Valid values are [\"x86_64\"] and [\"arm64\"]."
+}
+
+variable "package_type" {
+  type        = string
+  default     = "Zip"
+  description = "The Lambda deployment package type. Valid options: Zip or Image"
+}
+
+variable "iam_role_arn" {
+  type        = string
+  default     = null
+  description = "Iam Role arn to be attached to lambda function."
+}
+
+variable "image_uri" {
+  type        = string
+  default     = null
+  description = "The ECR image URI containing the function's deployment package."
+}
+
+variable "principal_org_id" {
+  type        = string
+  default     = null
+  description = "The identifier for your organization in AWS Organizations. Use this to grant permissions to all the AWS accounts under this organization."
 }
