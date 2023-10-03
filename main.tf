@@ -139,7 +139,7 @@ resource "aws_lambda_function" "default" {
       source_code_hash,
     ]
   }
-  depends_on = [aws_iam_role_policy_attachment.default]
+  depends_on = [aws_iam_role_policy_attachment.default, aws_cloudwatch_log_group.lambda]
 }
 
 # Module      : Lambda Permission
