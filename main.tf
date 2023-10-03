@@ -58,7 +58,7 @@ resource "aws_lambda_function" "default" {
   layers                         = var.create_layers ? aws_lambda_layer_version.default.*.arn : var.layers
   timeout                        = var.timeout
   publish                        = var.publish
-  kms_key_arn                    = var.kms_key_arn == null ? aws_kms_key.kms[0].arn : var.kms_key_arn
+  kms_key_arn                    = var.enable_kms ? aws_kms_key.kms[0].arn : var.lambda_kms_key_arn
   image_uri                      = var.image_uri
   package_type                   = var.package_type
   architectures                  = var.architectures
@@ -216,7 +216,7 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 resource "aws_kms_key" "kms" {
-  count                   = var.enable && var.enable_kms ? 1 : 0
+  count                   = var.enable && var.enable_kms ? 2 : 0
   deletion_window_in_days = var.kms_key_deletion_window
   enable_key_rotation     = var.enable_key_rotation
 }
@@ -227,11 +227,17 @@ resource "aws_kms_alias" "kms-alias" {
   target_key_id = aws_kms_key.kms[0].key_id
 }
 
+resource "aws_kms_alias" "kms-alias-cloudwatch" {
+  count         = var.enable && var.enable_kms ? 1 : 0
+  name          = !var.existing_cloudwatch_log_group ? format("alias/Lambda-cloudwatch-key", module.labels.id) : format("alias/%s-lambda-cloudwatch-key", module.labels.id)
+  target_key_id = aws_kms_key.kms[1].key_id
+}
+
 ##-----------------------------------------------------------------------------
 ## Below resource will attach policy to above created kms key. The above created key require policy to be attached so that lambda can access it. 
 ## It will be only created when kms key is enabled. 
 ##-----------------------------------------------------------------------------
-resource "aws_kms_key_policy" "example" {
+resource "aws_kms_key_policy" "lambda" {
   count  = var.enable && var.enable_kms ? 1 : 0
   key_id = aws_kms_key.kms[0].id
   policy = jsonencode({
@@ -263,56 +269,79 @@ resource "aws_kms_key_policy" "example" {
 
 }
 
-# locals {
-#   log_group_arn_regional = try(data.aws_cloudwatch_log_group.lambda[0].arn, aws_cloudwatch_log_group.lambda[0].arn, "")
-#   log_group_name         = try(data.aws_cloudwatch_log_group.lambda[0].name, aws_cloudwatch_log_group.lambda[0].name, "")
-#   log_group_arn          = var.create_iam_role  ? format("arn:%s:%s:%s:%s:%s", data.aws_arn.log_group_arn[0].partition, data.aws_arn.log_group_arn[0].service, var.lambda_at_edge_logs_all_regions ? "*" : "us-east-1", data.aws_arn.log_group_arn[0].account, data.aws_arn.log_group_arn[0].resource) : local.log_group_arn_regional
-# }
+resource "aws_kms_key_policy" "cloudwatch" {
+  count  = var.enable && var.enable_kms ? 1 : 0
+  key_id = aws_kms_key.kms[1].id
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Id" : "key-default-1",
+    "Statement" : [{
+      "Sid" : "Enable IAM User Permissions",
+      "Effect" : "Allow",
+      "Principal" : {
+        "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+      },
+      "Action" : "kms:*",
+      "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Principal" : { "Service" : "logs.${data.aws_region.current.name}.amazonaws.com" },
+        "Action" : [
+          "kms:Encrypt*",
+          "kms:Decrypt*",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:Describe*"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
 
-# data "aws_cloudwatch_log_group" "lambda" {
-#   count = local.create && var.create_function && !var.create_layer && var.use_existing_cloudwatch_log_group ? 1 : 0
+}
 
-#   name = "/aws/lambda/${module.labels.id}"
-# }
 
-# resource "aws_cloudwatch_log_group" "lambda" {
-#   count = local.create && var.create_function && !var.create_layer && !var.use_existing_cloudwatch_log_group ? 1 : 0
+locals {
+  log_group_arn = try(data.aws_cloudwatch_log_group.lambda[0].arn, aws_cloudwatch_log_group.lambda[0].arn, "")
+}
 
-#   name              = "/aws/lambda/${module.labels.id}"
-#   retention_in_days = var.cloudwatch_logs_retention_in_days
-#   kms_key_id        = var.cloudwatch_logs_kms_key_id
+data "aws_cloudwatch_log_group" "lambda" {
+  count = var.enable && var.existing_cloudwatch_log_group ? 1 : 0
+  name  = "/aws/lambda/${module.labels.id}"
+}
 
-#   tags = merge(var.tags, var.cloudwatch_logs_tags)
-# }
+resource "aws_cloudwatch_log_group" "lambda" {
+  count             = var.enable && !var.existing_cloudwatch_log_group ? 1 : 0
+  name              = "/aws/lambda/${module.labels.id}"
+  retention_in_days = var.cloudwatch_logs_retention_in_days
+  kms_key_id        = var.enable_kms ? aws_kms_key.kms[1].arn : var.cloudwatch_logs_kms_key_arn
+  tags              = module.labels.tags
+}
 
-# data "aws_arn" "log_group_arn" {
-#   count = var.create_iam_role ? 1 : 0
-#   arn = local.log_group_arn_regional
-# }
+data "aws_iam_policy_document" "logs" {
+  count = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
+  statement {
+    effect = "Allow"
+    actions = compact([
+      !var.existing_cloudwatch_log_group ? "logs:CreateLogGroup" : "",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ])
+    resources = flatten([for _, v in ["%v:*", "%v:*:*"] : format(v, local.log_group_arn)])
+  }
+}
 
-# data "aws_iam_policy_document" "logs" {
-#   count = local.create_role && var.attach_cloudwatch_logs_policy ? 1 : 0
-#   statement {
-#     effect = "Allow"
-#     actions = compact([
-#       !var.use_existing_cloudwatch_log_group ? "logs:CreateLogGroup" : "",
-#       "logs:CreateLogStream",
-#       "logs:PutLogEvents"
-#     ])
-#     resources = flatten([for _, v in ["%v:*", "%v:*:*"] : format(v, local.log_group_arn)])
-#   }
-# }
+resource "aws_iam_policy" "logs" {
+  count  = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
+  name   = "aws_lambda-logs"
+  path   = var.policy_path
+  policy = data.aws_iam_policy_document.logs[0].json
+  tags   = module.labels.tags
+}
 
-# resource "aws_iam_policy" "logs" {
-#   count = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
-#   name   = "aws_lambda-logs"
-#   path   = var.policy_path
-#   policy = data.aws_iam_policy_document.logs[0].json
-#   tags   = module.labels.tags
-# }
-
-# resource "aws_iam_role_policy_attachment" "logs" {
-#   count = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
-#   role       = aws_iam_role.default[0].name
-#   policy_arn = aws_iam_policy.logs[0].arn
-# }
+resource "aws_iam_role_policy_attachment" "logs" {
+  count      = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
+  role       = aws_iam_role.default[0].name
+  policy_arn = aws_iam_policy.logs[0].arn
+}

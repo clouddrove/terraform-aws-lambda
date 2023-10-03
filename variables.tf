@@ -30,18 +30,6 @@ variable "attributes" {
   description = "Additional attributes (e.g. `1`)."
 }
 
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
-}
-
 variable "managedby" {
   type        = string
   default     = "hello@clouddrove.com"
@@ -54,12 +42,6 @@ variable "enable" {
   type        = bool
   default     = false
   description = "Whether to create lambda function."
-}
-
-variable "enabled_cloudwatch_logging" {
-  type        = bool
-  default     = false
-  description = "Whether to create create efs file system."
 }
 
 variable "filename" {
@@ -127,9 +109,15 @@ variable "publish" {
   description = "Whether to publish creation/change as new Lambda Function Version. Defaults to false."
 }
 
-variable "kms_key_arn" {
+variable "cloudwatch_logs_kms_key_arn" {
   type        = string
-  default     = ""
+  default     = null
+  description = "The arn for the KMS encryption key for cloudwatch log group"
+}
+
+variable "lambda_kms_key_arn" {
+  type        = string
+  default     = null
   description = "The ARN for the KMS encryption key."
 }
 
@@ -389,4 +377,28 @@ variable "principal_org_id" {
   type        = string
   default     = null
   description = "The identifier for your organization in AWS Organizations. Use this to grant permissions to all the AWS accounts under this organization."
+}
+
+variable "cloudwatch_logs_retention_in_days" {
+  type        = number
+  default     = null
+  description = "Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653."
+}
+
+variable "existing_cloudwatch_log_group" {
+  type        = bool
+  default     = false
+  description = "Whether to use an existing CloudWatch log group or create new"
+}
+
+variable "attach_cloudwatch_logs_policy" {
+  type        = bool
+  default     = true
+  description = "Controls whether CloudWatch Logs policy should be added to IAM role for Lambda Function"
+}
+
+variable "policy_path" {
+  type        = string
+  default     = null
+  description = "Path of policies to that should be added to IAM role for Lambda Function"
 }
