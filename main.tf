@@ -229,7 +229,7 @@ resource "aws_kms_alias" "kms-alias" {
 
 resource "aws_kms_alias" "kms-alias-cloudwatch" {
   count         = var.enable && var.enable_kms ? 1 : 0
-  name          = !var.existing_cloudwatch_log_group ? format("alias/%s", "lambda-cloudwatch-key") : format("alias/%s-lambda-cloudwatch-key", module.labels.id)
+  name          = var.existing_cloudwatch_log_group ? format("alias/%s", "lambda-cloudwatch-key") : format("alias/%s-lambda-cloudwatch-key", module.labels.id)
   target_key_id = aws_kms_key.kms[1].key_id
 }
 
