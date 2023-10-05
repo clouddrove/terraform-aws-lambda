@@ -148,7 +148,7 @@ resource "aws_lambda_function" "default" {
 resource "aws_lambda_permission" "default" {
   count = var.enable && length(var.actions) > 0 ? length(var.actions) : 0
 
-  statement_id       = length(var.statement_ids) > 0 ? element(var.statement_ids, count.index) : ""
+  statement_id       = length(var.statement_ids) > 0 ? element(var.statement_ids, count.index) : null
   event_source_token = length(var.event_source_tokens) > 0 ? element(var.event_source_tokens, count.index) : null
   action             = element(var.actions, count.index)
   function_name      = join("", aws_lambda_function.default.*.function_name)
