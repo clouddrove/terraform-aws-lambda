@@ -189,10 +189,11 @@ resource "aws_iam_policy" "default" {
   name        = format("%s-logging", module.labels.id)
   path        = "/"
   description = "IAM policy for logging from a lambda"
-  policy      = data.aws_iam_policy_document.default.json
+  policy      = data.aws_iam_policy_document.default[0].json
 }
 #tfsec:ignore:aws-iam-no-policy-wildcards
 data "aws_iam_policy_document" "default" {
+  count = var.enable ? 1 : 0
   statement {
     actions   = var.iam_actions
     effect    = "Allow"
@@ -203,8 +204,7 @@ data "aws_iam_policy_document" "default" {
 # Module      : Iam Role Policy Attachment
 # Description : Terraform module to attach Iam policy with role resource on AWS for lambda.
 resource "aws_iam_role_policy_attachment" "default" {
-  count = var.enable && var.create_iam_role ? 1 : 0
-
+  count      = var.enable && var.create_iam_role ? 1 : 0
   role       = join("", aws_iam_role.default.*.name)
   policy_arn = join("", aws_iam_policy.default.*.arn)
 }
@@ -216,7 +216,7 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 resource "aws_kms_key" "kms" {
-  count                   = var.enable && var.enable_kms ? 2 : 0
+  count                   = var.enable && var.enable_kms ? !var.existing_cloudwatch_log_group ? 2 : 1 : 0
   deletion_window_in_days = var.kms_key_deletion_window
   enable_key_rotation     = var.enable_key_rotation
 }
@@ -228,8 +228,8 @@ resource "aws_kms_alias" "kms-alias" {
 }
 
 resource "aws_kms_alias" "kms-alias-cloudwatch" {
-  count         = var.enable && var.enable_kms ? 1 : 0
-  name          = var.existing_cloudwatch_log_group ? format("alias/%s", "lambda-cloudwatch-key") : format("alias/%s-lambda-cloudwatch-key", module.labels.id)
+  count         = var.enable && var.enable_kms && !var.existing_cloudwatch_log_group ? 1 : 0
+  name          = format("alias/%s-lambda-cloudwatch-key", module.labels.id)
   target_key_id = aws_kms_key.kms[1].key_id
 }
 
@@ -270,7 +270,7 @@ resource "aws_kms_key_policy" "lambda" {
 }
 
 resource "aws_kms_key_policy" "cloudwatch" {
-  count  = var.enable && var.enable_kms ? 1 : 0
+  count  = var.enable && var.enable_kms && !var.existing_cloudwatch_log_group ? 1 : 0
   key_id = aws_kms_key.kms[1].id
   policy = jsonencode({
     "Version" : "2012-10-17",
