@@ -308,7 +308,7 @@ locals {
 
 data "aws_cloudwatch_log_group" "lambda" {
   count = var.enable && var.existing_cloudwatch_log_group ? 1 : 0
-  name  = "/aws/lambda/${module.labels.id}"
+  name  = var.existing_cloudwatch_log_group_name
 }
 
 resource "aws_cloudwatch_log_group" "lambda" {

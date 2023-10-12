@@ -391,6 +391,12 @@ variable "existing_cloudwatch_log_group" {
   description = "Whether to use an existing CloudWatch log group or create new"
 }
 
+variable "existing_cloudwatch_log_group_name" {
+  type        = string
+  default     = null
+  description = "Name of existing cloudwatch log group."
+}
+
 variable "attach_cloudwatch_logs_policy" {
   type        = bool
   default     = true
