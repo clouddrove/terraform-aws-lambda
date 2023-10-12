@@ -11,6 +11,6 @@ output "tags" {
 }
 
 output "lambda_log_group_name" {
-  value       = var.existing_cloudwatch_log_group ? aws_cloudwatch_log_group.lambda[0].name : 0
+  value       = !var.existing_cloudwatch_log_group ? aws_cloudwatch_log_group.lambda[0].name : 0
   description = "A mapping of tags to assign to the resource."
 }
