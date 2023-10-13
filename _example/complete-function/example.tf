@@ -9,7 +9,7 @@ module "lambda" {
   environment = "test"
   label_order = ["name", "environment"]
 
-  enabled  = true
+  enable   = true
   timeout  = 60
   filename = "../../lambda_packages"
   handler  = "index.lambda_handler"
