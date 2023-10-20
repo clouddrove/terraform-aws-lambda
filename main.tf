@@ -33,6 +33,7 @@ resource "aws_lambda_layer_version" "default" {
 ##-----------------------------------------------------------------------------
 ## Lambda allows you to trigger execution of code in response to events in AWS, enabling serverless backend solutions. The Lambda Function itself includes source code and runtime configuration.
 ##-----------------------------------------------------------------------------
+#tfsec:ignore:aws-lambda-enable-tracing
 resource "aws_lambda_function" "default" {
   count                          = var.enable ? 1 : 0
   function_name                  = module.labels.id
