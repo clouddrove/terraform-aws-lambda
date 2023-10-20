@@ -15,18 +15,20 @@ github_repo: clouddrove/terraform-aws-lambda
 
 # Badges to display
 badges:
-  - name: "Terraform"
-    image: "https://img.shields.io/badge/Terraform-v1.1.7-green"
-    url: "https://www.terraform.io"
-  - name: "Licence"
-    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
-    url: "LICENSE.md"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/clouddrove/terraform-aws-lambda.svg"
+    url: "https://github.com/clouddrove/terraform-aws-lambda/releases/latest"
   - name: "tfsec"
     image: "https://github.com/clouddrove/terraform-aws-lambda/actions/workflows/tfsec.yml/badge.svg"
     url: "https://github.com/clouddrove/terraform-aws-lambda/actions/workflows/tfsec.yml"
-  - name: "static-checks"
-    image: "https://github.com/clouddrove/terraform-aws-lambda/actions/workflows/terraform.yml/badge.svg"
-    url: "https://github.com/clouddrove/terraform-aws-lambda/actions/workflows/terraform.yml"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
+    url: "LICENSE.md"
+
+prerequesties:
+  - name: Terraform 1.5.6
+    url: https://learn.hashicorp.com/terraform/getting-started/install.html
+
 #  description of this project
 # yamllint disable rule:line-length
 description: |-
@@ -44,66 +46,60 @@ usage: |-
   ### Basic Function
   ```hcl
     module "lambda" {
-      source        = "clouddrove/lambda/aws"
-      version       = "1.3.0"
-      name           = "lambda"
-      environment    = "test"
-      label_order    = ["name","environment"]
-      enabled        = true
-      filename       = "./../../../lambda_function_payload"
-      handler        = "index.handler"
-      runtime        = "nodejs8.10"
-      variables      = {
-                         foo = "bar"
-                       }
+      source      = "clouddrove/lambda/aws"
+      name        = local.name
+      environment = local.environment
+      filename    = "../../lambda_packages/existing_package.zip"
+      handler     = "index.lambda_handler"
+      runtime     = "python3.7"
+      variables = {
+        foo = "bar"
+      }
     }
   ```
   ### Basic S3 Function
   ```hcl
     module "lambda" {
       source        = "clouddrove/lambda/aws"
-      version       = "1.3.0"
-      name          = "lambda"
-      environment   = "test"
-      label_order   = ["name","environment"]
-      enabled       = true
-      s3_bucket     = "test-s3-backups"
-      s3_key        = "lambda_function_payload.zip"
-      handler       = "index.handler"
-      runtime       = "nodejs8.10"
-      variables     = {
-                        foo = "bar"
-                      }
+      name        = local.name
+      environment = local.environment
+      s3_bucket   = "clouddrove-secure-bucket-test"
+      s3_key      = "index.zip"
+      handler     = "index.handler"
+      runtime     = "nodejs18.x"
+      variables = {
+        foo = "bar"
+      }
     }
   ```
   ### Complete Function
   ```hcl
     module "lambda" {
-      source        = "clouddrove/lambda/aws"
-      version       = "1.3.0"
-
-      name        = "lambda"
-      environment = "test"
-      label_order = ["name","environment"]
-      enabled     = true
-      timeout = 60
-
-      filename           = "./../../lambda/src"
-      handler            = "index.lambda_handler"
-      runtime            = "python3.8"
+      source                            = "clouddrove/lambda/aws"
+      name                              = local.name
+      environment                       = local.environment
+      create_layers                     = true
+      timeout                           = 60
+      filename                          = "../../lambda_packages/existing_package.zip"
+      handler                           = "index.lambda_handler"
+      runtime                           = "python3.8"
+      compatible_architectures          = ["arm64"]
+      cloudwatch_logs_retention_in_days = 7
+      reserved_concurrent_executions    = 90
       iam_actions = [
         "logs:CreateLogStream",
         "logs:CreateLogGroup",
         "logs:PutLogEvents"
+    
       ]
       names = [
         "python_layer"
       ]
-      layer_filenames = ["./../../lambda/packages/Python3-lambda.zip"]
+      layer_filenames = ["../../lambda_packages/guardduty_enabler.zip"]
       compatible_runtimes = [
         ["python3.8"]
       ]
-
+    
       statement_ids = [
         "AllowExecutionFromCloudWatch"
       ]
@@ -113,9 +109,9 @@ usage: |-
       principals = [
         "events.amazonaws.com"
       ]
-      source_arns = ["arn:aws:events:eu-west-1:xxxxxxxxxxxxx:rule/rulename"]
+      source_arns = ["arn:aws:iam::xxxxxxxxxx:role/alarm-lambda-role"]
       variables = {
-        foo  = "bar"
+        foo = "bar"
       }
     }
   ```

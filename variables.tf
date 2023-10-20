@@ -20,7 +20,7 @@ variable "environment" {
 
 variable "label_order" {
   type        = list(any)
-  default     = []
+  default     = ["name", "environment"]
   description = "Label order, e.g. `name`,`application`."
 }
 
@@ -40,26 +40,30 @@ variable "managedby" {
 # Description : Terraform Lambda function module variables.
 variable "enable" {
   type        = bool
-  default     = false
+  default     = true
   description = "Whether to create lambda function."
 }
 
 variable "filename" {
+  type        = string
   default     = null
   description = "The path to the function's deployment package within the local filesystem. If defined, The s3_-prefixed options cannot be used."
 }
 
 variable "s3_bucket" {
+  type        = string
   default     = null
   description = "The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function."
 }
 
 variable "s3_key" {
+  type        = string
   default     = null
   description = "The S3 key of an object containing the function's deployment package. Conflicts with filename."
 }
 
 variable "s3_object_version" {
+  type        = string
   default     = null
   description = "The object version containing the function's deployment package. Conflicts with filename. "
 }
@@ -76,6 +80,7 @@ variable "description" {
 }
 
 variable "layers" {
+  type        = list(string)
   default     = null
   description = "List of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda Function."
 }
@@ -296,14 +301,14 @@ variable "skip_destroy" {
 }
 
 variable "compatible_architectures" {
-  type        = list(set(string))
+  type        = list(string)
   default     = null
   description = "List of Architectures lambda layer is compatible with. Currently x86_64 and arm64 can be specified."
 }
 
 variable "create_layers" {
   type        = bool
-  default     = true
+  default     = false
   description = "Flag to control creation of lambda layers."
 }
 

@@ -1,15 +1,9 @@
-# Managed By : CloudDrove
-# Description : Terraform module to create Iam role resource on AWS for lambda.
-# Copyright @ CloudDrove. All Right Reserved.
-
-#Module      : label
-#Description : This terraform module is designed to generate consistent label names and tags
-#              for resources. You can use terraform-labels to implement a strict naming
-#              convention.
+##-----------------------------------------------------------------------------
+## Labels module callled that will be used for naming and tags.
+##-----------------------------------------------------------------------------
 module "labels" {
-  source  = "clouddrove/labels/aws"
-  version = "1.3.0"
-
+  source      = "clouddrove/labels/aws"
+  version     = "1.3.0"
   name        = var.name
   repository  = var.repository
   environment = var.environment
@@ -18,8 +12,9 @@ module "labels" {
   label_order = var.label_order
 }
 
-# Module      : Lambda layers
-# Description : Terraform module to create Lambda layers resource on AWS.
+##-----------------------------------------------------------------------------
+## Lambda Layers allow you to reuse shared bits of code across multiple lambda functions.
+##-----------------------------------------------------------------------------
 resource "aws_lambda_layer_version" "default" {
   count                    = var.enable && var.create_layers ? length(var.names) : 0
   layer_name               = element(var.names, count.index)
@@ -30,32 +25,24 @@ resource "aws_lambda_layer_version" "default" {
   s3_key                   = length(var.s3_keies) > 0 ? element(var.s3_keies, count.index) : null
   s3_object_version        = length(var.s3_object_versions) > 0 ? element(var.s3_object_versions, count.index) : null
   compatible_runtimes      = element(var.compatible_runtimes, count.index)
-  compatible_architectures = element(var.compatible_architectures, count.index)
+  compatible_architectures = var.compatible_architectures
   skip_destroy             = var.skip_destroy
   source_code_hash         = var.enable_source_code_hash ? filebase64sha256(element(var.layer_filenames, count.index)) : null
 }
 
-# Module      : Archive file
-# Description : Terraform module to zip a directory.
-data "archive_file" "default" {
-  count       = var.enable && var.source_file != null ? 1 : 0
-  type        = "zip"
-  source_dir  = var.source_file
-  output_path = format("%s.zip", module.labels.id)
-}
-
-# Module      : Lambda function
-# Description : Terraform module to create Lambda function resource on AWS.
+##-----------------------------------------------------------------------------
+## Lambda allows you to trigger execution of code in response to events in AWS, enabling serverless backend solutions. The Lambda Function itself includes source code and runtime configuration.
+##-----------------------------------------------------------------------------
 resource "aws_lambda_function" "default" {
   count                          = var.enable ? 1 : 0
   function_name                  = module.labels.id
   description                    = var.description
-  role                           = var.create_iam_role ? join("", aws_iam_role.default.*.arn) : var.iam_role_arn
+  role                           = var.create_iam_role ? join("", aws_iam_role.default[*].arn) : var.iam_role_arn
   handler                        = var.handler
   memory_size                    = var.memory_size
   reserved_concurrent_executions = var.reserved_concurrent_executions
   runtime                        = var.runtime
-  layers                         = var.create_layers ? aws_lambda_layer_version.default.*.arn : var.layers
+  layers                         = var.create_layers ? aws_lambda_layer_version.default[*].arn : var.layers
   timeout                        = var.timeout
   publish                        = var.publish
   kms_key_arn                    = var.enable_kms ? aws_kms_key.kms[0].arn : var.lambda_kms_key_arn
@@ -100,7 +87,6 @@ resource "aws_lambda_function" "default" {
     }
   }
 
-
   dynamic "snap_start" {
     for_each = var.snap_start ? [true] : []
 
@@ -142,16 +128,15 @@ resource "aws_lambda_function" "default" {
   depends_on = [aws_iam_role_policy_attachment.default, aws_cloudwatch_log_group.lambda]
 }
 
-# Module      : Lambda Permission
-# Description : Terraform module to create Lambda permission resource on AWS to create
-#               trigger for function.
+##-----------------------------------------------------------------------------
+## IAM permissions that grant a specific AWS Cloud service or resource permission to invoke a Lambda function.
+##-----------------------------------------------------------------------------
 resource "aws_lambda_permission" "default" {
-  count = var.enable && length(var.actions) > 0 ? length(var.actions) : 0
-
+  count              = var.enable && length(var.actions) > 0 ? length(var.actions) : 0
   statement_id       = length(var.statement_ids) > 0 ? element(var.statement_ids, count.index) : null
   event_source_token = length(var.event_source_tokens) > 0 ? element(var.event_source_tokens, count.index) : null
   action             = element(var.actions, count.index)
-  function_name      = join("", aws_lambda_function.default.*.function_name)
+  function_name      = join("", aws_lambda_function.default[*].function_name)
   principal          = element(var.principals, count.index)
   qualifier          = length(var.qualifiers) > 0 ? element(var.qualifiers, count.index) : null
   source_account     = length(var.source_accounts) > 0 ? element(var.source_accounts, count.index) : null
@@ -159,8 +144,9 @@ resource "aws_lambda_permission" "default" {
   principal_org_id   = var.principal_org_id
 }
 
-# Module      : Iam role
-# Description : Terraform module to create Iam role resource on AWS for lambda.
+##-----------------------------------------------------------------------------
+## Terraform module to create Iam role resource on AWS for lambda.
+##-----------------------------------------------------------------------------
 resource "aws_iam_role" "default" {
   count = var.enable && var.create_iam_role ? 1 : 0
   name  = format("%s-role", module.labels.id)
@@ -182,8 +168,9 @@ resource "aws_iam_role" "default" {
 EOF
 }
 
-# Module      : Iam policy
-# Description : Terraform module to create Iam policy resource on AWS for lambda.
+##-----------------------------------------------------------------------------
+## Terraform module to create Iam policy resource on AWS for lambda.
+##-----------------------------------------------------------------------------
 resource "aws_iam_policy" "default" {
   count       = var.enable && var.create_iam_role ? 1 : 0
   name        = format("%s-logging", module.labels.id)
@@ -191,6 +178,7 @@ resource "aws_iam_policy" "default" {
   description = "IAM policy for logging from a lambda"
   policy      = data.aws_iam_policy_document.default[0].json
 }
+
 #tfsec:ignore:aws-iam-no-policy-wildcards
 data "aws_iam_policy_document" "default" {
   count = var.enable ? 1 : 0
@@ -201,12 +189,13 @@ data "aws_iam_policy_document" "default" {
   }
 }
 
-# Module      : Iam Role Policy Attachment
-# Description : Terraform module to attach Iam policy with role resource on AWS for lambda.
+##-----------------------------------------------------------------------------
+## Terraform module to attach Iam policy with role resource on AWS for lambda.
+##-----------------------------------------------------------------------------
 resource "aws_iam_role_policy_attachment" "default" {
   count      = var.enable && var.create_iam_role ? 1 : 0
-  role       = join("", aws_iam_role.default.*.name)
-  policy_arn = join("", aws_iam_policy.default.*.arn)
+  role       = join("", aws_iam_role.default[*].name)
+  policy_arn = join("", aws_iam_policy.default[*].arn)
 }
 
 ##-----------------------------------------------------------------------------
@@ -223,13 +212,13 @@ resource "aws_kms_key" "kms" {
 
 resource "aws_kms_alias" "kms-alias" {
   count         = var.enable && var.enable_kms ? 1 : 0
-  name          = format("alias/%s-lambda-key", module.labels.id)
+  name          = format("alias/%s-lambda-keys", module.labels.id)
   target_key_id = aws_kms_key.kms[0].key_id
 }
 
 resource "aws_kms_alias" "kms-alias-cloudwatch" {
   count         = var.enable && var.enable_kms && !var.existing_cloudwatch_log_group ? 1 : 0
-  name          = format("alias/%s-lambda-cloudwatch-key", module.labels.id)
+  name          = format("alias/%s-lambda-cloudwatch-keys", module.labels.id)
   target_key_id = aws_kms_key.kms[1].key_id
 }
 
@@ -266,7 +255,6 @@ resource "aws_kms_key_policy" "lambda" {
       }
     ]
   })
-
 }
 
 resource "aws_kms_key_policy" "cloudwatch" {
@@ -300,7 +288,6 @@ resource "aws_kms_key_policy" "cloudwatch" {
   })
 
 }
-
 
 locals {
   log_group_arn = try(data.aws_cloudwatch_log_group.lambda[0].arn, aws_cloudwatch_log_group.lambda[0].arn, "")

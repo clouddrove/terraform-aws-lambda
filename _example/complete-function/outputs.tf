@@ -1,5 +1,5 @@
 output "arn" {
-  value       = module.lambda.*.arn
+  value       = module.lambda[*].arn
   description = "The ID of the Hostzone."
 }
 
