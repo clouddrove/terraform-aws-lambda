@@ -2,18 +2,22 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "lambda" {
-  source = "../../"
-
+locals {
   name        = "lambda"
   environment = "test"
-  label_order = ["name", "environment"]
+}
 
-  enabled   = true
-  s3_bucket = "test-s3-backups"
-  s3_key    = "lambda_function_payload.zip"
-  handler   = "index.handler"
-  runtime   = "nodejs8.10"
+##-----------------------------------------------------------------------------
+## lambda Module Call with s3_bucket.
+##-----------------------------------------------------------------------------
+module "lambda" {
+  source      = "../../"
+  name        = local.name
+  environment = local.environment
+  s3_bucket   = "clouddrove-secure-bucket-test"
+  s3_key      = "index.zip"
+  handler     = "index.handler"
+  runtime     = "nodejs18.x"
   variables = {
     foo = "bar"
   }

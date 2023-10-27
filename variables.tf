@@ -20,7 +20,7 @@ variable "environment" {
 
 variable "label_order" {
   type        = list(any)
-  default     = []
+  default     = ["name", "environment"]
   description = "Label order, e.g. `name`,`application`."
 }
 
@@ -28,18 +28,6 @@ variable "attributes" {
   type        = list(any)
   default     = []
   description = "Additional attributes (e.g. `1`)."
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `organization`, `environment`, `name` and `attributes`."
-}
-
-variable "tags" {
-  type        = map(any)
-  default     = {}
-  description = "Additional tags (e.g. map(`BusinessUnit`,`XYZ`)."
 }
 
 variable "managedby" {
@@ -50,34 +38,32 @@ variable "managedby" {
 
 # Module      : Lambda function
 # Description : Terraform Lambda function module variables.
-variable "enabled" {
+variable "enable" {
   type        = bool
-  default     = false
+  default     = true
   description = "Whether to create lambda function."
 }
 
-variable "enabled_cloudwatch_logging" {
-  type        = bool
-  default     = false
-  description = "Whether to create create efs file system."
-}
-
 variable "filename" {
+  type        = string
   default     = null
   description = "The path to the function's deployment package within the local filesystem. If defined, The s3_-prefixed options cannot be used."
 }
 
 variable "s3_bucket" {
+  type        = string
   default     = null
   description = "The S3 bucket location containing the function's deployment package. Conflicts with filename. This bucket must reside in the same AWS region where you are creating the Lambda function."
 }
 
 variable "s3_key" {
+  type        = string
   default     = null
   description = "The S3 key of an object containing the function's deployment package. Conflicts with filename."
 }
 
 variable "s3_object_version" {
+  type        = string
   default     = null
   description = "The object version containing the function's deployment package. Conflicts with filename. "
 }
@@ -94,6 +80,7 @@ variable "description" {
 }
 
 variable "layers" {
+  type        = list(string)
   default     = null
   description = "List of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda Function."
 }
@@ -127,9 +114,15 @@ variable "publish" {
   description = "Whether to publish creation/change as new Lambda Function Version. Defaults to false."
 }
 
-variable "kms_key_arn" {
+variable "cloudwatch_logs_kms_key_arn" {
   type        = string
-  default     = ""
+  default     = null
+  description = "The arn for the KMS encryption key for cloudwatch log group"
+}
+
+variable "lambda_kms_key_arn" {
+  type        = string
+  default     = null
   description = "The ARN for the KMS encryption key."
 }
 
@@ -263,4 +256,160 @@ variable "image_config_working_directory" {
   type        = string
   default     = null
   description = "The working directory for the docker image"
+}
+
+variable "enable_key_rotation" {
+  type        = bool
+  default     = true
+  description = "Specifies whether key rotation is enabled. Defaults to true(security best practice)"
+}
+
+variable "kms_key_deletion_window" {
+  type        = number
+  default     = 10
+  description = "KMS Key deletion window in days."
+}
+
+variable "enable_kms" {
+  type        = bool
+  default     = true
+  description = "Flag to control creation of kms key for lambda encryption"
+}
+
+variable "create_iam_role" {
+  type        = bool
+  default     = true
+  description = "Flag to control creation of iam role and its related resources."
+}
+
+variable "source_file" {
+  type        = string
+  default     = null
+  description = "Path of source file that is required to be converted in `.zip` file"
+}
+
+variable "enable_source_code_hash" {
+  type        = bool
+  default     = false
+  description = "Whether to ignore changes to the function's source code hash. Set to true if you manage infrastructure and code deployments separately."
+}
+
+variable "skip_destroy" {
+  type        = bool
+  default     = false
+  description = "Whether to retain the old version of a previously deployed Lambda Layer."
+}
+
+variable "compatible_architectures" {
+  type        = list(string)
+  default     = null
+  description = "List of Architectures lambda layer is compatible with. Currently x86_64 and arm64 can be specified."
+}
+
+variable "create_layers" {
+  type        = bool
+  default     = false
+  description = "Flag to control creation of lambda layers."
+}
+
+variable "snap_start" {
+  type        = bool
+  default     = false
+  description = "(Optional) Snap start settings for low-latency startups"
+}
+
+variable "dead_letter_target_arn" {
+  type        = string
+  default     = null
+  description = "The ARN of an SNS topic or SQS queue to notify when an invocation fails."
+}
+
+variable "tracing_mode" {
+  type        = string
+  default     = null
+  description = "Tracing mode of the Lambda Function. Valid value can be either PassThrough or Active."
+}
+
+variable "file_system_local_mount_path" {
+  type        = string
+  default     = null
+  description = "The path where the function can access the file system, starting with /mnt/."
+}
+
+variable "file_system_arn" {
+  type        = string
+  default     = null
+  description = "The Amazon Resource Name (ARN) of the Amazon EFS Access Point that provides access to the file system."
+}
+
+variable "ephemeral_storage_size" {
+  type        = number
+  default     = 512
+  description = "Amount of ephemeral storage (/tmp) in MB your Lambda Function can use at runtime. Valid value between 512 MB to 10,240 MB (10 GB)."
+}
+
+variable "code_signing_config_arn" {
+  type        = string
+  default     = null
+  description = "Amazon Resource Name (ARN) for a Code Signing Configuration"
+}
+
+variable "architectures" {
+  type        = list(string)
+  default     = null
+  description = "Instruction set architecture for your Lambda function. Valid values are [\"x86_64\"] and [\"arm64\"]."
+}
+
+variable "package_type" {
+  type        = string
+  default     = "Zip"
+  description = "The Lambda deployment package type. Valid options: Zip or Image"
+}
+
+variable "iam_role_arn" {
+  type        = string
+  default     = null
+  description = "Iam Role arn to be attached to lambda function."
+}
+
+variable "image_uri" {
+  type        = string
+  default     = null
+  description = "The ECR image URI containing the function's deployment package."
+}
+
+variable "principal_org_id" {
+  type        = string
+  default     = null
+  description = "The identifier for your organization in AWS Organizations. Use this to grant permissions to all the AWS accounts under this organization."
+}
+
+variable "cloudwatch_logs_retention_in_days" {
+  type        = number
+  default     = null
+  description = "Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653."
+}
+
+variable "existing_cloudwatch_log_group" {
+  type        = bool
+  default     = false
+  description = "Whether to use an existing CloudWatch log group or create new"
+}
+
+variable "existing_cloudwatch_log_group_name" {
+  type        = string
+  default     = null
+  description = "Name of existing cloudwatch log group."
+}
+
+variable "attach_cloudwatch_logs_policy" {
+  type        = bool
+  default     = true
+  description = "Controls whether CloudWatch Logs policy should be added to IAM role for Lambda Function"
+}
+
+variable "policy_path" {
+  type        = string
+  default     = null
+  description = "Path of policies to that should be added to IAM role for Lambda Function"
 }
