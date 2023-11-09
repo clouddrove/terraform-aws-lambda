@@ -14,3 +14,8 @@ output "lambda_log_group_name" {
   value       = !var.existing_cloudwatch_log_group ? aws_cloudwatch_log_group.lambda[0].name : 0
   description = "A mapping of tags to assign to the resource."
 }
+
+output "invoke_arn" {
+  value       = join("", aws_lambda_function.default.*.invoke_arn)
+  description = "Invoke ARN"
+}
