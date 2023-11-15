@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2023-11-15
+### :sparkles: New Features
+- [`86d967d`](https://github.com/clouddrove/terraform-aws-lambda/commit/86d967def3a2746c31ebd8b50b6e5b85699606c6) - auto changelog action added *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+- [`fc076a7`](https://github.com/clouddrove/terraform-aws-lambda/commit/fc076a74b4e6fe764b012e6f5de3876afa09ece5) - added dependabot.yml file *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*
+- [`f39225a`](https://github.com/clouddrove/terraform-aws-lambda/commit/f39225a8898c640918ca66c0b95ae43d758964ff) - add deepsource & added assignees,reviewer in dependabot *(commit by [@Tanveer143s](https://github.com/Tanveer143s))*
+- [`916af4a`](https://github.com/clouddrove/terraform-aws-lambda/commit/916af4aa2be8d50f693f1e70fd306e67a1b588d2) - invoke_arn output *(commit by [@h1manshu98](https://github.com/h1manshu98))*
+
+
 ## [1.3.0] - 2023-01-26
 
 ## [0.15.0] - 2020-05-20
@@ -72,3 +80,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.12.5.1]: https://github.com/clouddrove/terraform-aws-lambda/releases/tag/0.12.5.1
 [0.15.0]: https://github.com/clouddrove/terraform-aws-ecr/compare/0.15.0...master
 [1.3.0]: https://github.com/clouddrove/terraform-aws-lambda/releases/tag/1.3.0
+
+[1.3.1]: https://github.com/clouddrove/terraform-aws-lambda/compare/1.3.0...1.3.1
