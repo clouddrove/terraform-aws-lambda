@@ -16,7 +16,7 @@ module "lambda" {
   environment                       = local.environment
   create_layers                     = true
   timeout                           = 60
-  filename                          = "../../lambda_packages/existing_package.zip"
+  filename                          = "../../lambda_packages/index.py"
   handler                           = "index.lambda_handler"
   runtime                           = "python3.8"
   compatible_architectures          = ["arm64"]

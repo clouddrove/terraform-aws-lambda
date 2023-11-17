@@ -151,22 +151,7 @@ resource "aws_lambda_permission" "default" {
 resource "aws_iam_role" "default" {
   count = var.enable && var.create_iam_role ? 1 : 0
   name  = format("%s-role", module.labels.id)
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+  assume_role_policy =var.assume_role_policy
 }
 
 ##-----------------------------------------------------------------------------
@@ -175,7 +160,7 @@ EOF
 resource "aws_iam_policy" "default" {
   count       = var.enable && var.create_iam_role ? 1 : 0
   name        = format("%s-logging", module.labels.id)
-  path        = "/"
+  path        = var.aws_iam_policy_path
   description = "IAM policy for logging from a lambda"
   policy      = data.aws_iam_policy_document.default[0].json
 }
@@ -322,7 +307,7 @@ data "aws_iam_policy_document" "logs" {
 
 resource "aws_iam_policy" "logs" {
   count  = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
-  name   = "aws_lambda-logs"
+  name   = var.aws_iam_policy_name
   path   = var.policy_path
   policy = data.aws_iam_policy_document.logs[0].json
   tags   = module.labels.tags
