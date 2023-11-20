@@ -415,9 +415,9 @@ variable "policy_path" {
 }
 
 variable "assume_role_policy" {
-  type = string
+  type        = string
   description = "assume role policy document in JSON format"
-  default = <<EOF
+  default     = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [

@@ -149,9 +149,9 @@ resource "aws_lambda_permission" "default" {
 ## Terraform module to create Iam role resource on AWS for lambda.
 ##-----------------------------------------------------------------------------
 resource "aws_iam_role" "default" {
-  count = var.enable && var.create_iam_role ? 1 : 0
-  name  = format("%s-testrole", module.labels.id)
-  assume_role_policy =var.assume_role_policy
+  count              = var.enable && var.create_iam_role ? 1 : 0
+  name               = format("%s-testrole", module.labels.id)
+  assume_role_policy = var.assume_role_policy
 }
 
 ##-----------------------------------------------------------------------------
