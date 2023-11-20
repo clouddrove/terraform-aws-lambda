@@ -413,3 +413,33 @@ variable "policy_path" {
   default     = null
   description = "Path of policies to that should be added to IAM role for Lambda Function"
 }
+
+variable "assume_role_policy" {
+  type        = string
+  description = "assume role policy document in JSON format"
+  default     = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+variable "aws_iam_policy_logs_name" {
+  type        = string
+  default     = "aws_testlambda-logs"
+  description = "IAM policy name mentioned here"
+}
+variable "aws_iam_policy_path" {
+  type        = string
+  default     = "/"
+  description = "IAM policy path default value"
+}

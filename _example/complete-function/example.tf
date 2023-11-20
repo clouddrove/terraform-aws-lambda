@@ -16,7 +16,7 @@ module "lambda" {
   environment                       = local.environment
   create_layers                     = true
   timeout                           = 60
-  filename                          = "../../lambda_packages/existing_package.zip"
+  filename                          = "../../lambda_packages/index.zip"
   handler                           = "index.lambda_handler"
   runtime                           = "python3.8"
   compatible_architectures          = ["arm64"]
@@ -31,7 +31,7 @@ module "lambda" {
   names = [
     "python_layer"
   ]
-  layer_filenames = ["../../lambda_packages/guardduty_enabler.zip"]
+  layer_filenames = ["../../lambda_packages/layer.zip"]
   compatible_runtimes = [
     ["python3.8"]
   ]
