@@ -1,10 +1,5 @@
 # Module      : Lambda
 # Description : Terraform Lambda function module outputs.
-output "name" {
-  value       = module.labels.name
-  description = "The name can identifying your Lambda Function."
-}
-
 output "arn" {
   value       = join("", aws_lambda_function.default[*].arn)
   description = "The Amazon Resource Name (ARN) identifying your Lambda Function."

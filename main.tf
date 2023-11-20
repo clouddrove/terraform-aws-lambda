@@ -149,9 +149,24 @@ resource "aws_lambda_permission" "default" {
 ## Terraform module to create Iam role resource on AWS for lambda.
 ##-----------------------------------------------------------------------------
 resource "aws_iam_role" "default" {
-  count              = var.enable && var.create_iam_role ? 1 : 0
-  name               = format("%s-testrole", module.labels.id)
-  assume_role_policy = var.assume_role_policy
+  count = var.enable && var.create_iam_role ? 1 : 0
+  name  = format("%s-role", module.labels.id)
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
 }
 
 ##-----------------------------------------------------------------------------
@@ -159,8 +174,8 @@ resource "aws_iam_role" "default" {
 ##-----------------------------------------------------------------------------
 resource "aws_iam_policy" "default" {
   count       = var.enable && var.create_iam_role ? 1 : 0
-  name        = format("%s-testlogging", module.labels.id)
-  path        = var.aws_iam_policy_path
+  name        = format("%s-logging", module.labels.id)
+  path        = "/"
   description = "IAM policy for logging from a lambda"
   policy      = data.aws_iam_policy_document.default[0].json
 }
@@ -198,13 +213,13 @@ resource "aws_kms_key" "kms" {
 
 resource "aws_kms_alias" "kms-alias" {
   count         = var.enable && var.enable_kms ? 1 : 0
-  name          = format("alias/%s-testlambda-keys", module.labels.id)
+  name          = format("alias/%s-lambda-keys", module.labels.id)
   target_key_id = aws_kms_key.kms[0].key_id
 }
 
 resource "aws_kms_alias" "kms-alias-cloudwatch" {
   count         = var.enable && var.enable_kms && !var.existing_cloudwatch_log_group ? 1 : 0
-  name          = format("alias/%s-testlambda-cloudwatch-keys", module.labels.id)
+  name          = format("alias/%s-lambda-cloudwatch-keys", module.labels.id)
   target_key_id = aws_kms_key.kms[1].key_id
 }
 
@@ -286,7 +301,7 @@ data "aws_cloudwatch_log_group" "lambda" {
 
 resource "aws_cloudwatch_log_group" "lambda" {
   count             = var.enable && !var.existing_cloudwatch_log_group ? 1 : 0
-  name              = "/aws/testlambda/${module.labels.id}"
+  name              = "/aws/lambda/${module.labels.id}"
   retention_in_days = var.cloudwatch_logs_retention_in_days
   kms_key_id        = var.enable_kms ? aws_kms_key.kms[1].arn : var.cloudwatch_logs_kms_key_arn
   tags              = module.labels.tags
@@ -307,7 +322,7 @@ data "aws_iam_policy_document" "logs" {
 
 resource "aws_iam_policy" "logs" {
   count  = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
-  name   = var.aws_iam_policy_logs_name
+  name   = "aws_lambda-logs"
   path   = var.policy_path
   policy = data.aws_iam_policy_document.logs[0].json
   tags   = module.labels.tags
