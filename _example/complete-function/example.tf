@@ -4,7 +4,7 @@ provider "aws" {
 
 locals {
   name        = "lambda"
-  environment = "test"
+  environment = "pooja-test"
 }
 
 ##-----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ module "lambda" {
   principals = [
     "events.amazonaws.com"
   ]
-  source_arns = ["arn:aws:iam::924144197303:role/alarm-lambda-role"]
+  source_arns = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/alarm-lambda-role"]
   variables = {
     foo = "bar"
   }

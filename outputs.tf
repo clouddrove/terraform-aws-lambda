@@ -6,7 +6,7 @@ output "name" {
 }
 
 output "arn" {
-  value       = join("", aws_lambda_function.default[*].arn)
+  value       = join("", aws_lambda_function.default[*].invoke_arn)
   description = "The Amazon Resource Name (ARN) identifying your Lambda Function."
 }
 
