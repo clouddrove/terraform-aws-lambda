@@ -16,7 +16,7 @@ module "lambda" {
   environment                       = local.environment
   create_layers                     = true
   timeout                           = 60
-  filename                          = "../../lambda_packages/index.zip"
+  filename                          = "../../lambda_packages/index.zip" # -- The content of index.py should be present in zip format
   handler                           = "index.lambda_handler"
   runtime                           = "python3.8"
   compatible_architectures          = ["arm64"]
@@ -31,7 +31,7 @@ module "lambda" {
   names = [
     "python_layer"
   ]
-  layer_filenames = ["../../lambda_packages/layer.zip"]
+  layer_filenames = ["../../lambda_packages/layer.zip"] # -- The content of layer.py should be present in zip format
   compatible_runtimes = [
     ["python3.8"]
   ]
@@ -45,7 +45,7 @@ module "lambda" {
   principals = [
     "events.amazonaws.com"
   ]
-  source_arns = ["arn:aws:iam::924144197303:role/alarm-lambda-role"]
+  source_arns = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/alarm-lambda-role"]
   variables = {
     foo = "bar"
   }

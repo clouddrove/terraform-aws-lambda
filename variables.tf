@@ -99,6 +99,7 @@ variable "timeout" {
 
 variable "runtime" {
   type        = string
+  default     = "python3.7"
   description = "Runtimes."
 }
 
@@ -433,11 +434,7 @@ variable "assume_role_policy" {
 }
 EOF
 }
-variable "aws_iam_policy_logs_name" {
-  type        = string
-  default     = "aws_testlambda-logs"
-  description = "IAM policy name mentioned here"
-}
+
 variable "aws_iam_policy_path" {
   type        = string
   default     = "/"
