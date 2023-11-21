@@ -4,7 +4,7 @@ provider "aws" {
 
 locals {
   name        = "lambda"
-  environment = "pooja-test"
+  environment = "test"
 }
 
 ##-----------------------------------------------------------------------------
