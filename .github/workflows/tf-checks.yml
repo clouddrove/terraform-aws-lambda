@@ -6,16 +6,16 @@ on:
   workflow_dispatch:
 jobs:
   basic-function-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.7
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
       working_directory: './_example/basic-function/'
 
   basic-s3-function-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.7
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
       working_directory: './_example/basic-s3-function/'
 
   complete-function-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.7
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.0.9
     with:
       working_directory: './_example/complete-function/'
