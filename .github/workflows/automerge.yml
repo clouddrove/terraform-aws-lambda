@@ -1,3 +1,4 @@
+---
 name: Auto merge
 on:
   pull_request:
@@ -7,4 +8,5 @@ jobs:
     secrets:
       GITHUB: ${{ secrets.GITHUB }}
     with:
-      tfcheck: 'complete-function-example / Get min/max versions'
+      tfcheck: 'basic-function-example / Check code format'
+...
