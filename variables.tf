@@ -93,8 +93,8 @@ variable "memory_size" {
 
 variable "timeout" {
   type        = number
-  default     = 3
-  description = "The amount of time your Lambda Function has to run in seconds. Defaults to 3."
+  default     = 10
+  description = "The amount of time in seconds your Lambda Function will run. Defaults to 3."
 }
 
 variable "runtime" {
@@ -151,7 +151,7 @@ variable "s3_object_versions" {
   description = "The object version containing the function's deployment package. Conflicts with filename."
 }
 
-variable "names" {
+variable "layer_names" {
   type        = list(any)
   default     = []
   description = "A unique name for your Lambda Layer."

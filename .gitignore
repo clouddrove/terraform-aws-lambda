@@ -121,7 +121,7 @@ Temporary Items
 *.7z
 *.jar
 *.rar
-*.zip
+# *.zip -- To use zip files for Lambda-Function and its Layers.
 *.gz
 *.tgz
 *.bzip
