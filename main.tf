@@ -16,8 +16,8 @@ module "labels" {
 ## Lambda Layers allow you to reuse shared bits of code across multiple lambda functions.
 ##-----------------------------------------------------------------------------
 resource "aws_lambda_layer_version" "default" {
-  count                    = var.enable && var.create_layers ? length(var.names) : 0
-  layer_name               = element(var.names, count.index)
+  count                    = var.enable && var.create_layers ? length(var.layer_names) : 0
+  layer_name               = element(var.layer_names, count.index)
   description              = length(var.descriptions) > 0 ? element(var.descriptions, count.index) : ""
   license_info             = length(var.license_infos) > 0 ? element(var.license_infos, count.index) : ""
   filename                 = length(var.layer_filenames) > 0 ? element(var.layer_filenames, count.index) : null
@@ -159,9 +159,9 @@ resource "aws_iam_role" "default" {
 ##-----------------------------------------------------------------------------
 resource "aws_iam_policy" "default" {
   count       = var.enable && var.create_iam_role ? 1 : 0
-  name        = format("%s-logging", module.labels.id)
+  name        = format("%s-additional-permissions", module.labels.id)
   path        = var.aws_iam_policy_path
-  description = "IAM policy for logging from a lambda"
+  description = "Additional permission for ${module.labels.id} Lambda Function IAMRole."
   policy      = data.aws_iam_policy_document.default[0].json
 }
 
@@ -307,7 +307,7 @@ data "aws_iam_policy_document" "logs" {
 
 resource "aws_iam_policy" "logs" {
   count  = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
-  name   = format("%s-logs-iam-policy", module.labels.id)
+  name   = format("%s-cloudwatch-logging", module.labels.id)
   path   = var.policy_path
   policy = data.aws_iam_policy_document.logs[0].json
   tags   = module.labels.tags

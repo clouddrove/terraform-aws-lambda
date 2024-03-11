@@ -12,6 +12,11 @@ output "arn" {
   description = "The ID of the Hostzone."
 }
 
+output "invoke_arn" {
+  value       = module.lambda.invoke_arn
+  description = "Invoke ARN of lambda function."
+}
+
 output "tags" {
   value       = module.lambda.tags
   description = "A mapping of tags to assign to the resource."
