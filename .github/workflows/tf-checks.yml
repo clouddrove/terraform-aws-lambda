@@ -8,14 +8,14 @@ jobs:
   basic-function-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
     with:
-      working_directory: './_example/basic-function/'
+      working_directory: './examples/basic-function/'
 
   basic-s3-function-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
     with:
-      working_directory: './_example/basic-s3-function/'
+      working_directory: './examples/basic-s3-function/'
 
   complete-function-example:
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@1.2.4
     with:
-      working_directory: './_example/complete-function/'
+      working_directory: './examples/complete-function/'
