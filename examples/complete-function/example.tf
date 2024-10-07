@@ -27,7 +27,7 @@ module "lambda" {
   # -- ARNs of Triggers
   source_arns = [""]
 
-  # -- Lambda-Function IAMRole permission 
+  # -- Lambda-Function IAMRole permission
   iam_actions = [
     "s3:PutObject",
     "s3:ListBucket",

@@ -209,8 +209,8 @@ resource "aws_kms_alias" "kms-alias-cloudwatch" {
 }
 
 ##-----------------------------------------------------------------------------
-## Below resource will attach policy to above created kms key. The above created key require policy to be attached so that lambda can access it. 
-## It will be only created when kms key is enabled. 
+## Below resource will attach policy to above created kms key. The above created key require policy to be attached so that lambda can access it.
+## It will be only created when kms key is enabled.
 ##-----------------------------------------------------------------------------
 resource "aws_kms_key_policy" "lambda" {
   count  = var.enable && var.enable_kms ? 1 : 0

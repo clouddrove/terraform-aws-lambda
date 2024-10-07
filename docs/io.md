@@ -83,4 +83,3 @@
 | lambda\_log\_group\_name | A mapping of tags to assign to the resource. |
 | name | The name of the Lambda Function |
 | tags | A mapping of tags to assign to the resource. |
-
