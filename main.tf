@@ -229,7 +229,7 @@ resource "aws_kms_key_policy" "lambda" {
       },
       {
         "Effect" : "Allow",
-        "Principal" : { "Service" : "lambda.${data.aws_region.current.name}.amazonaws.com" },
+        "Principal" : { "Service" : "lambda.${data.aws_region.current.region}.amazonaws.com" },
         "Action" : [
           "kms:Encrypt*",
           "kms:Decrypt*",
@@ -260,7 +260,7 @@ resource "aws_kms_key_policy" "cloudwatch" {
       },
       {
         "Effect" : "Allow",
-        "Principal" : { "Service" : "logs.${data.aws_region.current.name}.amazonaws.com" },
+        "Principal" : { "Service" : "logs.${data.aws_region.current.region}.amazonaws.com" },
         "Action" : [
           "kms:Encrypt*",
           "kms:Decrypt*",
@@ -317,4 +317,45 @@ resource "aws_iam_role_policy_attachment" "logs" {
   count      = var.enable && var.create_iam_role && var.attach_cloudwatch_logs_policy ? 1 : 0
   role       = aws_iam_role.default[0].name
   policy_arn = aws_iam_policy.logs[0].arn
+}
+
+resource "aws_lambda_provisioned_concurrency_config" "current_version" {
+  count = var.enable && var.create_function && !var.create_layer && var.provisioned_concurrent_executions > -1 && var.enable_provisioned_concurrency ? 1 : 0
+
+  region                            = var.region
+  function_name                     = aws_lambda_function.default[0].function_name
+  qualifier                         = aws_lambda_function.default[0].version
+  provisioned_concurrent_executions = var.provisioned_concurrent_executions
+}
+
+resource "aws_lambda_function_recursion_config" "this" {
+  count = var.enable && var.create_function && !var.create_layer && var.recursive_loop == "Allow" && var.enable_recursion_config ? 1 : 0
+
+  region         = var.region
+  function_name  = aws_lambda_function.default[0].function_name
+  recursive_loop = var.recursive_loop
+}
+
+resource "aws_lambda_function_url" "this" {
+  count = var.enable && var.create_function && !var.create_layer && var.create_lambda_function_url && var.enable_lambda_function_url ? 1 : 0
+
+  region        = var.region
+  function_name = aws_lambda_function.default[0].function_name
+  qualifier     = var.create_unqualified_alias_lambda_function_url ? null : aws_lambda_function.default[0].version
+
+  authorization_type = var.authorization_type
+  invoke_mode        = var.invoke_mode
+
+  dynamic "cors" {
+    for_each = length(keys(var.cors)) == 0 ? [] : [var.cors]
+
+    content {
+      allow_credentials = try(cors.value.allow_credentials, null)
+      allow_headers     = try(cors.value.allow_headers, null)
+      allow_methods     = try(cors.value.allow_methods, null)
+      allow_origins     = try(cors.value.allow_origins, null)
+      expose_headers    = try(cors.value.expose_headers, null)
+      max_age           = try(cors.value.max_age, null)
+    }
+  }
 }
