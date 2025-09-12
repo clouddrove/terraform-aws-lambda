@@ -23,6 +23,24 @@ module "lambda" {
   timeout                           = 60
   reserved_concurrent_executions    = 90
   cloudwatch_logs_retention_in_days = 7
+  provisioned_concurrent_executions = 2
+  recursive_loop                    = "Allow"
+  publish                           = true
+
+  ######################
+  # Lambda Function URL
+  ######################
+  create_lambda_function_url = true
+  authorization_type         = "AWS_IAM"
+  cors = {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["*"]
+    allow_headers     = ["date", "keep-alive"]
+    expose_headers    = ["keep-alive", "date"]
+    max_age           = 86400
+  }
+  invoke_mode = "RESPONSE_STREAM"
 
   # -- ARNs of Triggers
   source_arns = [""]

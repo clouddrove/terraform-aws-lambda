@@ -21,3 +21,22 @@ output "tags" {
   value       = module.lambda.tags
   description = "A mapping of tags to assign to the resource."
 }
+
+
+output "lambda_function_url" {
+  value = module.lambda.lambda_function_url
+}
+
+output "lambda_function_url_id" {
+  value = module.lambda.lambda_function_url_id
+}
+
+output "lambda_provisioned_concurrency_config_id" {
+  value = module.lambda.lambda_provisioned_concurrency_config_id
+}
+
+output "lambda_recursion_config_function_name" {
+  value = module.lambda.lambda_recursion_config_function_name
+}
+
+

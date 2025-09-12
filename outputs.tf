@@ -24,3 +24,27 @@ output "invoke_arn" {
   value       = join("", aws_lambda_function.default[*].invoke_arn)
   description = "Invoke ARN"
 }
+
+
+
+# inside modules/lambda/outputs.tf
+
+output "lambda_function_url" {
+  description = "The URL of the Lambda Function"
+  value       = try(aws_lambda_function_url.this[0].function_url, "")
+}
+
+output "lambda_function_url_id" {
+  description = "The Lambda Function URL generated id"
+  value       = try(aws_lambda_function_url.this[0].url_id, "")
+}
+
+output "lambda_provisioned_concurrency_config_id" {
+  description = "The ID of the Lambda Provisioned Concurrency Config"
+  value       = try(aws_lambda_provisioned_concurrency_config.current_version[0].id, "")
+}
+
+output "lambda_recursion_config_function_name" {
+  description = "The Lambda Function name associated with the Recursion Config"
+  value       = try(aws_lambda_function_recursion_config.this[0].function_name, "")
+}

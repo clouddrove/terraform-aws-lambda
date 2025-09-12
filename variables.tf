@@ -440,3 +440,90 @@ variable "aws_iam_policy_path" {
   default     = "/"
   description = "IAM policy path default value"
 }
+
+variable "region" {
+  description = "Region where the resource(s) will be managed. Defaults to the region set in the provider configuration"
+  type        = string
+  default     = null
+}
+
+variable "create_function" {
+  description = "Controls whether Lambda Function resource should be created"
+  type        = bool
+  default     = true
+}
+
+variable "create_layer" {
+  description = "Controls whether Lambda Layer resource should be created"
+  type        = bool
+  default     = false
+}
+
+##########################
+# Provisioned Concurrency
+##########################
+
+variable "provisioned_concurrent_executions" {
+  description = "Amount of capacity to allocate. Set to 1 or greater to enable, or set to 0 to disable provisioned concurrency."
+  type        = number
+  default     = -1
+}
+
+############################################
+# Lambda Recursive Loop Settings
+############################################
+
+variable "recursive_loop" {
+  description = "Lambda function recursion configuration. Valid values are Allow or Terminate."
+  type        = string
+  default     = null
+}
+
+variable "create_lambda_function_url" {
+  description = "Controls whether the Lambda Function URL resource should be created"
+  type        = bool
+  default     = false
+}
+
+###############
+# Function URL
+###############
+
+variable "create_unqualified_alias_lambda_function_url" {
+  description = "Whether to use unqualified alias pointing to $LATEST version in Lambda Function URL"
+  type        = bool
+  default     = false
+}
+
+variable "authorization_type" {
+  description = "The type of authentication that the Lambda Function URL uses. Set to 'AWS_IAM' to restrict access to authenticated IAM users only. Set to 'NONE' to bypass IAM authentication and create a public endpoint."
+  type        = string
+  default     = "NONE"
+}
+
+variable "cors" {
+  description = "CORS settings to be used by the Lambda Function URL"
+  type        = any
+  default     = {}
+}
+
+variable "invoke_mode" {
+  description = "Invoke mode of the Lambda Function URL. Valid values are BUFFERED (default) and RESPONSE_STREAM."
+  type        = string
+  default     = null
+}
+
+variable "enable_provisioned_concurrency" {
+  type    = bool
+  default = false
+}
+
+variable "enable_recursion_config" {
+  type    = bool
+  default = false
+}
+
+variable "enable_lambda_function_url" {
+  type    = bool
+  default = false
+}
