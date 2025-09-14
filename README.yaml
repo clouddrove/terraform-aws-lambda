@@ -99,7 +99,7 @@ usage: |-
         "logs:CreateLogStream",
         "logs:CreateLogGroup",
         "logs:PutLogEvents"
-    
+
       ]
       names = [
         "python_layer"
@@ -108,7 +108,7 @@ usage: |-
       compatible_runtimes = [
         ["python3.8"]
       ]
-    
+
       statement_ids = [
         "AllowExecutionFromCloudWatch"
       ]
