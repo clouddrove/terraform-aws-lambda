@@ -5,7 +5,7 @@ on:
   pull_request:
 jobs:
   basic-function-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/basic-function/'
       provider: aws
@@ -13,7 +13,7 @@ jobs:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
 
   basic-s3-function-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/basic-s3-function/'
       provider: aws
@@ -21,7 +21,7 @@ jobs:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
 
   complete-function-example:
-    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
+    uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@v2
     with:
       working_directory: './examples/complete-function/'
       provider: aws
