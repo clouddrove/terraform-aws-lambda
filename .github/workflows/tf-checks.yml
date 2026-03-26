@@ -5,6 +5,7 @@ on:
   pull_request:
 jobs:
   basic-function-example:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/basic-function/'
@@ -13,6 +14,7 @@ jobs:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
 
   basic-s3-function-example:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/basic-s3-function/'
@@ -21,6 +23,7 @@ jobs:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
 
   complete-function-example:
+    if: github.actor != 'dependabot[bot]'
     uses: clouddrove/github-shared-workflows/.github/workflows/tf-checks.yml@master
     with:
       working_directory: './examples/complete-function/'
