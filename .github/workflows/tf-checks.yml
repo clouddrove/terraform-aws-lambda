@@ -11,6 +11,7 @@ jobs:
       working_directory: './examples/basic-function/'
       provider: aws
       enable_plan: true
+      show_plan: false
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
 
@@ -21,6 +22,7 @@ jobs:
       working_directory: './examples/basic-s3-function/'
       provider: aws
       enable_plan: true
+      show_plan: false
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
 
@@ -31,5 +33,6 @@ jobs:
       working_directory: './examples/complete-function/'
       provider: aws
       enable_plan: true
+      show_plan: false
     secrets:
       BUILD_ROLE: ${{ secrets.BUILD_ROLE }}
