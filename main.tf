@@ -10,6 +10,7 @@ module "labels" {
   managedby   = var.managedby
   attributes  = var.attributes
   label_order = var.label_order
+  extra_tags  = var.tags
 }
 
 ##-----------------------------------------------------------------------------
@@ -152,6 +153,7 @@ resource "aws_iam_role" "default" {
   count              = var.enable && var.create_iam_role ? 1 : 0
   name               = format("%s-role", module.labels.id)
   assume_role_policy = var.assume_role_policy
+  tags               = module.labels.tags
 }
 
 ##-----------------------------------------------------------------------------
@@ -194,6 +196,7 @@ resource "aws_kms_key" "kms" {
   count                   = var.enable && var.enable_kms ? !var.existing_cloudwatch_log_group ? 2 : 1 : 0
   deletion_window_in_days = var.kms_key_deletion_window
   enable_key_rotation     = var.enable_key_rotation
+  tags                    = module.labels.tags
 }
 
 resource "aws_kms_alias" "kms-alias" {
