@@ -57,4 +57,8 @@ module "lambda" {
   variables = {
     foo = "bar"
   }
+  # logging_config = null  # Optional: logging configuration for provider v5+
+  # permissions_boundary = null  # Optional: permissions boundary for IAM role
+  # bypass_policy_lockout_safety_check = false  # Optional: bypass policy lockout safety check for KMS key
+  # deletion_protection_enabled = false  # Optional: enable deletion protection for CloudWatch log group
 }

@@ -440,3 +440,27 @@ variable "aws_iam_policy_path" {
   default     = "/"
   description = "IAM policy path default value"
 }
+
+variable "permissions_boundary" {
+  type        = string
+  default     = null
+  description = "Permissions boundary for IAM role"
+}
+
+variable "bypass_policy_lockout_safety_check" {
+  type        = bool
+  default     = false
+  description = "Bypass policy lockout safety check for KMS key"
+}
+
+variable "deletion_protection_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable deletion protection for CloudWatch log group"
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "A map of tags to add to all resources"
+}
