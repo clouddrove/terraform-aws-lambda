@@ -152,6 +152,8 @@ resource "aws_iam_role" "default" {
   count              = var.enable && var.create_iam_role ? 1 : 0
   name               = format("%s-role", module.labels.id)
   assume_role_policy = var.assume_role_policy
+  max_session_duration = var.max_session_duration
+  permissions_boundary = var.permissions_boundary
 }
 
 ##-----------------------------------------------------------------------------
@@ -194,6 +196,7 @@ resource "aws_kms_key" "kms" {
   count                   = var.enable && var.enable_kms ? !var.existing_cloudwatch_log_group ? 2 : 1 : 0
   deletion_window_in_days = var.kms_key_deletion_window
   enable_key_rotation     = var.enable_key_rotation
+  bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
 }
 
 resource "aws_kms_alias" "kms-alias" {
