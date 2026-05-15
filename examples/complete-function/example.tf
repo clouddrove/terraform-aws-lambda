@@ -57,4 +57,9 @@ module "lambda" {
   variables = {
     foo = "bar"
   }
+  # force_detach_policies = false  # Optional: Whether to force detachment of policies on IAM role deletion.
+  # max_session_duration = 3600  # Optional: The maximum session duration (in seconds) for the IAM role.
+  # permissions_boundary = null  # Optional: The ARN of the policy that is used to set the permissions boundary for the IAM role.
+  # managed_policy_arns = []  # Optional: A list of ARNs of the IAM policies to attach to the IAM role.
+  # inline_policy = null  # Optional: The policy document to use as an inline policy for the IAM role.
 }

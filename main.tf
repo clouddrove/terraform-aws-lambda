@@ -149,9 +149,14 @@ resource "aws_lambda_permission" "default" {
 ## Terraform module to create Iam role resource on AWS for lambda.
 ##-----------------------------------------------------------------------------
 resource "aws_iam_role" "default" {
-  count              = var.enable && var.create_iam_role ? 1 : 0
-  name               = format("%s-role", module.labels.id)
-  assume_role_policy = var.assume_role_policy
+  count                 = var.enable && var.create_iam_role ? 1 : 0
+  name                  = format("%s-role", module.labels.id)
+  assume_role_policy    = var.assume_role_policy
+  force_detach_policies = var.force_detach_policies
+  managed_policy_arns   = var.managed_policy_arns
+  permissions_boundary  = var.permissions_boundary
+  max_session_duration  = var.max_session_duration
+  tags = module.labels.tags
 }
 
 ##-----------------------------------------------------------------------------
@@ -163,6 +168,7 @@ resource "aws_iam_policy" "default" {
   path        = var.aws_iam_policy_path
   description = "Additional permission for ${module.labels.id} Lambda Function IAMRole."
   policy      = data.aws_iam_policy_document.default[0].json
+  tags = module.labels.tags
 }
 
 #tfsec:ignore:aws-iam-no-policy-wildcards
@@ -194,6 +200,7 @@ resource "aws_kms_key" "kms" {
   count                   = var.enable && var.enable_kms ? !var.existing_cloudwatch_log_group ? 2 : 1 : 0
   deletion_window_in_days = var.kms_key_deletion_window
   enable_key_rotation     = var.enable_key_rotation
+  tags = module.labels.tags
 }
 
 resource "aws_kms_alias" "kms-alias" {

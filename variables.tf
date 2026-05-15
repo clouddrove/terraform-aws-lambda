@@ -440,3 +440,27 @@ variable "aws_iam_policy_path" {
   default     = "/"
   description = "IAM policy path default value"
 }
+
+variable "permissions_boundary" {
+  type        = string
+  default     = null
+  description = "The ARN of the policy that is used to set the permissions boundary for the IAM role."
+}
+
+variable "force_detach_policies" {
+  type        = bool
+  default     = false
+  description = "Whether to force detachment of policies on IAM role deletion."
+}
+
+variable "max_session_duration" {
+  type        = number
+  default     = 3600
+  description = "The maximum session duration (in seconds) for the IAM role."
+}
+
+variable "managed_policy_arns" {
+  type        = list(string)
+  default     = []
+  description = "A list of ARNs of the IAM policies to attach to the IAM role."
+}
