@@ -443,7 +443,7 @@ variable "aws_iam_policy_path" {
 
 variable "max_session_duration" {
   type        = number
-  default     = 3600
+  default     = null
   description = "Maximum session duration for IAM role, added for provider v6.0+"
 }
 
