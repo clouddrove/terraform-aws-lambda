@@ -440,3 +440,99 @@ variable "aws_iam_policy_path" {
   default     = "/"
   description = "IAM policy path default value"
 }
+
+variable "region" {
+  type        = string
+  default     = null
+  description = "The AWS region to deploy resources."
+}
+
+variable "replace_security_groups_on_destroy" {
+  type        = bool
+  default     = null
+  description = "Replace security groups on destroy."
+}
+
+variable "source_kms_key_arn" {
+  type        = string
+  default     = null
+  description = "ARN of the source KMS key."
+}
+
+variable "managed_policy_arns" {
+  type        = list(string)
+  default     = null
+  description = "List of managed policy ARNs."
+}
+
+variable "name_prefix" {
+  type        = string
+  default     = null
+  description = "Prefix for names."
+}
+
+variable "max_session_duration" {
+  type        = number
+  default     = null
+  description = "Max session duration."
+}
+
+variable "path" {
+  type        = string
+  default     = null
+  description = "Path for the role."
+}
+
+variable "permissions_boundary" {
+  type        = string
+  default     = null
+  description = "Permissions boundary."
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = null
+  description = "Tags for the resource."
+}
+
+variable "publish_to" {
+  type        = string
+  default     = null
+  description = "Publish configuration."
+}
+
+variable "replacement_security_group_ids" {
+  type        = list(string)
+  default     = null
+  description = "List of security group IDs to replace."
+}
+
+variable "force_detach_policies" {
+  type        = bool
+  default     = null
+  description = "Force detach policies."
+}
+
+variable "code_sha256" {
+  type        = string
+  default     = null
+  description = "SHA256 hash of the source code package."
+}
+
+variable "function_url_auth_type" {
+  type        = string
+  default     = null
+  description = "The authentication type for the function URL."
+}
+
+variable "statement_id_prefix" {
+  type        = string
+  default     = null
+  description = "Prefix for the statement ID."
+}
+
+variable "invoked_via_function_url" {
+  type        = bool
+  default     = null
+  description = "Whether the function is invoked via function URL."
+}

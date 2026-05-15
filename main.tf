@@ -28,6 +28,7 @@ resource "aws_lambda_layer_version" "default" {
   compatible_architectures = var.compatible_architectures
   skip_destroy             = var.skip_destroy
   source_code_hash         = var.enable_source_code_hash ? filebase64sha256(element(var.layer_filenames, count.index)) : null
+  region                   = var.region
 }
 
 ##-----------------------------------------------------------------------------
@@ -126,32 +127,47 @@ resource "aws_lambda_function" "default" {
       source_code_hash,
     ]
   }
-  depends_on = [aws_iam_role_policy_attachment.default, aws_cloudwatch_log_group.lambda]
+  depends_on                         = [aws_iam_role_policy_attachment.default, aws_cloudwatch_log_group.lambda]
+  replace_security_groups_on_destroy = var.replace_security_groups_on_destroy
+  source_kms_key_arn                 = var.source_kms_key_arn
+  replacement_security_group_ids     = var.replacement_security_group_ids
+  publish_to                         = var.publish_to
+  code_sha256                        = var.code_sha256
 }
 
 ##-----------------------------------------------------------------------------
 ## IAM permissions that grant a specific AWS Cloud service or resource permission to invoke a Lambda function.
 ##-----------------------------------------------------------------------------
 resource "aws_lambda_permission" "default" {
-  count              = var.enable && length(var.actions) > 0 ? length(var.actions) : 0
-  statement_id       = length(var.statement_ids) > 0 ? element(var.statement_ids, count.index) : null
-  event_source_token = length(var.event_source_tokens) > 0 ? element(var.event_source_tokens, count.index) : null
-  action             = element(var.actions, count.index)
-  function_name      = join("", aws_lambda_function.default[*].function_name)
-  principal          = element(var.principals, count.index)
-  qualifier          = length(var.qualifiers) > 0 ? element(var.qualifiers, count.index) : null
-  source_account     = length(var.source_accounts) > 0 ? element(var.source_accounts, count.index) : null
-  source_arn         = length(var.source_arns) > 0 ? element(var.source_arns, count.index) : ""
-  principal_org_id   = var.principal_org_id
+  count                    = var.enable && length(var.actions) > 0 ? length(var.actions) : 0
+  statement_id             = length(var.statement_ids) > 0 ? element(var.statement_ids, count.index) : null
+  event_source_token       = length(var.event_source_tokens) > 0 ? element(var.event_source_tokens, count.index) : null
+  action                   = element(var.actions, count.index)
+  function_name            = join("", aws_lambda_function.default[*].function_name)
+  principal                = element(var.principals, count.index)
+  qualifier                = length(var.qualifiers) > 0 ? element(var.qualifiers, count.index) : null
+  source_account           = length(var.source_accounts) > 0 ? element(var.source_accounts, count.index) : null
+  source_arn               = length(var.source_arns) > 0 ? element(var.source_arns, count.index) : ""
+  principal_org_id         = var.principal_org_id
+  function_url_auth_type   = var.function_url_auth_type
+  region                   = var.region
+  statement_id_prefix      = var.statement_id_prefix
+  invoked_via_function_url = var.invoked_via_function_url
 }
 
 ##-----------------------------------------------------------------------------
 ## Terraform module to create Iam role resource on AWS for lambda.
 ##-----------------------------------------------------------------------------
 resource "aws_iam_role" "default" {
-  count              = var.enable && var.create_iam_role ? 1 : 0
-  name               = format("%s-role", module.labels.id)
-  assume_role_policy = var.assume_role_policy
+  count                 = var.enable && var.create_iam_role ? 1 : 0
+  name                  = format("%s-role", module.labels.id)
+  assume_role_policy    = var.assume_role_policy
+  managed_policy_arns   = var.managed_policy_arns
+  max_session_duration  = var.max_session_duration
+  path                  = var.path
+  tags                  = var.tags
+  permissions_boundary  = var.permissions_boundary
+  force_detach_policies = var.force_detach_policies
 }
 
 ##-----------------------------------------------------------------------------
@@ -163,6 +179,8 @@ resource "aws_iam_policy" "default" {
   path        = var.aws_iam_policy_path
   description = "Additional permission for ${module.labels.id} Lambda Function IAMRole."
   policy      = data.aws_iam_policy_document.default[0].json
+  name_prefix = var.name_prefix
+  tags        = var.tags
 }
 
 #tfsec:ignore:aws-iam-no-policy-wildcards
@@ -194,6 +212,7 @@ resource "aws_kms_key" "kms" {
   count                   = var.enable && var.enable_kms ? !var.existing_cloudwatch_log_group ? 2 : 1 : 0
   deletion_window_in_days = var.kms_key_deletion_window
   enable_key_rotation     = var.enable_key_rotation
+  tags                    = merge(var.tags, { Name = var.name })
 }
 
 resource "aws_kms_alias" "kms-alias" {
