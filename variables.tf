@@ -440,3 +440,213 @@ variable "aws_iam_policy_path" {
   default     = "/"
   description = "IAM policy path default value"
 }
+
+variable "region" {
+  type        = string
+  default     = null
+  description = "(Optional) The AWS region where the resource will be created."
+}
+
+variable "application_log_level" {
+  type        = string
+  default     = null
+  description = "(Optional) The log level for the application."
+}
+
+variable "capacity_provider_arn" {
+  type        = string
+  default     = null
+  description = "(Optional) The ARN of the capacity provider."
+}
+
+variable "capacity_provider_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for the capacity provider."
+}
+
+variable "code_sha256" {
+  type        = string
+  default     = null
+  description = "(Optional) User-defined hash of the source code package file."
+}
+
+variable "dead_letter_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for the dead letter queue."
+}
+
+variable "execution_environment_memory_gib_per_vcpu" {
+  type        = number
+  default     = null
+  description = "(Optional) The amount of memory in GiB per vCPU."
+}
+
+variable "ephemeral_storage" {
+  type        = number
+  default     = null
+  description = "(Optional) The amount of ephemeral storage in MB."
+}
+
+variable "file_system_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for the file system."
+}
+
+variable "lambda_managed_instances_capacity_provider_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for managed instances."
+}
+
+variable "durable_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for durable functions."
+}
+
+variable "execution_timeout" {
+  type        = number
+  default     = null
+  description = "(Optional) The execution timeout in seconds."
+}
+
+variable "log_format" {
+  type        = string
+  default     = null
+  description = "(Optional) The format of the logs."
+}
+
+variable "logging_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for logging."
+}
+
+variable "log_group" {
+  type        = string
+  default     = null
+  description = "(Optional) The log group for the function."
+}
+
+variable "ipv6_allowed_for_dual_stack" {
+  type        = bool
+  default     = false
+  description = "(Optional) Whether IPv6 is allowed for dual stack."
+}
+
+variable "image_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for the image."
+}
+
+variable "replace_security_groups_on_destroy" {
+  type        = bool
+  default     = false
+  description = "(Optional) Whether to replace security groups on destroy."
+}
+
+variable "retention_period" {
+  type        = number
+  default     = null
+  description = "(Optional) The retention period for the logs."
+}
+
+variable "per_execution_environment_max_concurrency" {
+  type        = number
+  default     = null
+  description = "(Optional) The maximum concurrency per execution environment."
+}
+
+variable "source_kms_key_arn" {
+  type        = string
+  default     = null
+  description = "(Optional) The ARN of the source KMS key."
+}
+
+variable "replacement_security_group_ids" {
+  type        = list(string)
+  default     = null
+  description = "(Optional) The security group IDs to replace."
+}
+
+variable "publish_to" {
+  type        = string
+  default     = null
+  description = "(Optional) The destination to publish to."
+}
+
+variable "system_log_level" {
+  type        = string
+  default     = null
+  description = "(Optional) The system log level."
+}
+
+variable "tenant_isolation_mode" {
+  type        = string
+  default     = null
+  description = "(Optional) The mode for tenant isolation."
+}
+
+variable "tracing_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for tracing."
+}
+
+variable "bypass_policy_lockout_safety_check" {
+  type        = bool
+  default     = false
+  description = "(Optional) Bypass policy lockout safety check."
+}
+
+variable "custom_key_store_id" {
+  type        = string
+  default     = null
+  description = "(Optional) The custom key store ID."
+}
+
+variable "tenancy_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for tenancy."
+}
+
+variable "rotation_period_in_days" {
+  type        = number
+  default     = null
+  description = "(Optional) The rotation period in days."
+}
+
+variable "vpc_config" {
+  type        = string
+  default     = null
+  description = "(Optional) Configuration for VPC."
+}
+
+variable "xks_key_id" {
+  type        = string
+  default     = null
+  description = "(Optional) The external key store ID."
+}
+
+variable "log_group_class" {
+  type        = string
+  default     = null
+  description = "(Optional) The class of the log group."
+}
+
+variable "name_prefix" {
+  type        = string
+  default     = null
+  description = "(Optional) Prefix for resource names."
+}
+
+variable "deletion_protection_enabled" {
+  type        = bool
+  default     = false
+  description = "(Optional) Enable deletion protection."
+}

@@ -285,11 +285,12 @@ data "aws_cloudwatch_log_group" "lambda" {
 }
 
 resource "aws_cloudwatch_log_group" "lambda" {
-  count             = var.enable && !var.existing_cloudwatch_log_group ? 1 : 0
-  name              = "/aws/lambda/${module.labels.id}"
-  retention_in_days = var.cloudwatch_logs_retention_in_days
-  kms_key_id        = var.enable_kms ? aws_kms_key.kms[1].arn : var.cloudwatch_logs_kms_key_arn
-  tags              = module.labels.tags
+  count                       = var.enable && !var.existing_cloudwatch_log_group ? 1 : 0
+  name                        = "/aws/lambda/${module.labels.id}"
+  retention_in_days           = var.cloudwatch_logs_retention_in_days
+  kms_key_id                  = var.enable_kms ? aws_kms_key.kms[1].arn : var.cloudwatch_logs_kms_key_arn
+  tags                        = module.labels.tags
+  deletion_protection_enabled = var.deletion_protection_enabled
 }
 
 data "aws_iam_policy_document" "logs" {
