@@ -57,4 +57,11 @@ module "lambda" {
   variables = {
     foo = "bar"
   }
+  # custom_key_store_id = null  # Custom key store ID for KMS key.
+  # bypass_policy_lockout_safety_check = false  # Bypass policy lockout safety check for KMS key.
+  # rotation_period_in_days = null  # Rotation period in days for KMS key.
+  # xks_key_id = null  # XKS key ID for KMS key.
+  # deletion_protection_enabled = false  # Enable deletion protection for CloudWatch log group.
+  # logging_config = null  # Logging configuration for Lambda function.
+  # permissions_boundary = null  # Permissions boundary for IAM role.
 }

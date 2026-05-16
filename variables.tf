@@ -440,3 +440,51 @@ variable "aws_iam_policy_path" {
   default     = "/"
   description = "IAM policy path default value"
 }
+
+variable "rotation_period_in_days" {
+  type        = number
+  default     = null
+  description = "Rotation period in days for KMS key."
+}
+
+variable "custom_key_store_id" {
+  type        = string
+  default     = null
+  description = "Custom key store ID for KMS key."
+}
+
+variable "bypass_policy_lockout_safety_check" {
+  type        = bool
+  default     = false
+  description = "Bypass policy lockout safety check for KMS key."
+}
+
+variable "deletion_protection_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable deletion protection for CloudWatch log group."
+}
+
+variable "xks_key_id" {
+  type        = string
+  default     = null
+  description = "XKS key ID for KMS key."
+}
+
+variable "permissions_boundary" {
+  type        = string
+  default     = null
+  description = "Permissions boundary for IAM role."
+}
+
+variable "logging_config" {
+  type        = string
+  default     = null
+  description = "Logging configuration for Lambda function."
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "A map of tags to add to all resources"
+}

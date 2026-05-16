@@ -10,6 +10,7 @@ module "labels" {
   managedby   = var.managedby
   attributes  = var.attributes
   label_order = var.label_order
+  extra_tags  = var.tags
 }
 
 ##-----------------------------------------------------------------------------
@@ -149,9 +150,10 @@ resource "aws_lambda_permission" "default" {
 ## Terraform module to create Iam role resource on AWS for lambda.
 ##-----------------------------------------------------------------------------
 resource "aws_iam_role" "default" {
-  count              = var.enable && var.create_iam_role ? 1 : 0
-  name               = format("%s-role", module.labels.id)
-  assume_role_policy = var.assume_role_policy
+  count                = var.enable && var.create_iam_role ? 1 : 0
+  name                 = format("%s-role", module.labels.id)
+  assume_role_policy   = var.assume_role_policy
+  permissions_boundary = var.permissions_boundary
 }
 
 ##-----------------------------------------------------------------------------
@@ -191,9 +193,13 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 resource "aws_kms_key" "kms" {
-  count                   = var.enable && var.enable_kms ? !var.existing_cloudwatch_log_group ? 2 : 1 : 0
-  deletion_window_in_days = var.kms_key_deletion_window
-  enable_key_rotation     = var.enable_key_rotation
+  count                              = var.enable && var.enable_kms ? !var.existing_cloudwatch_log_group ? 2 : 1 : 0
+  deletion_window_in_days            = var.kms_key_deletion_window
+  enable_key_rotation                = var.enable_key_rotation
+  bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
+  rotation_period_in_days            = var.rotation_period_in_days
+  xks_key_id                         = var.xks_key_id
+  custom_key_store_id                = var.custom_key_store_id
 }
 
 resource "aws_kms_alias" "kms-alias" {
@@ -285,11 +291,12 @@ data "aws_cloudwatch_log_group" "lambda" {
 }
 
 resource "aws_cloudwatch_log_group" "lambda" {
-  count             = var.enable && !var.existing_cloudwatch_log_group ? 1 : 0
-  name              = "/aws/lambda/${module.labels.id}"
-  retention_in_days = var.cloudwatch_logs_retention_in_days
-  kms_key_id        = var.enable_kms ? aws_kms_key.kms[1].arn : var.cloudwatch_logs_kms_key_arn
-  tags              = module.labels.tags
+  count                       = var.enable && !var.existing_cloudwatch_log_group ? 1 : 0
+  name                        = "/aws/lambda/${module.labels.id}"
+  retention_in_days           = var.cloudwatch_logs_retention_in_days
+  kms_key_id                  = var.enable_kms ? aws_kms_key.kms[1].arn : var.cloudwatch_logs_kms_key_arn
+  tags                        = module.labels.tags
+  deletion_protection_enabled = var.deletion_protection_enabled
 }
 
 data "aws_iam_policy_document" "logs" {
