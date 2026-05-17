@@ -10,6 +10,7 @@ module "labels" {
   managedby   = var.managedby
   attributes  = var.attributes
   label_order = var.label_order
+  extra_tags  = var.tags
 }
 
 ##-----------------------------------------------------------------------------
@@ -28,6 +29,7 @@ resource "aws_lambda_layer_version" "default" {
   compatible_architectures = var.compatible_architectures
   skip_destroy             = var.skip_destroy
   source_code_hash         = var.enable_source_code_hash ? filebase64sha256(element(var.layer_filenames, count.index)) : null
+  region                   = var.region
 }
 
 ##-----------------------------------------------------------------------------
@@ -126,7 +128,13 @@ resource "aws_lambda_function" "default" {
       source_code_hash,
     ]
   }
-  depends_on = [aws_iam_role_policy_attachment.default, aws_cloudwatch_log_group.lambda]
+  depends_on                         = [aws_iam_role_policy_attachment.default, aws_cloudwatch_log_group.lambda]
+  code_sha256                        = var.code_sha256
+  publish_to                         = var.publish_to
+  region                             = var.region
+  replace_security_groups_on_destroy = var.replace_security_groups_on_destroy
+  replacement_security_group_ids     = var.replacement_security_group_ids
+  source_kms_key_arn                 = var.source_kms_key_arn
 }
 
 ##-----------------------------------------------------------------------------
@@ -149,20 +157,28 @@ resource "aws_lambda_permission" "default" {
 ## Terraform module to create Iam role resource on AWS for lambda.
 ##-----------------------------------------------------------------------------
 resource "aws_iam_role" "default" {
-  count              = var.enable && var.create_iam_role ? 1 : 0
-  name               = format("%s-role", module.labels.id)
-  assume_role_policy = var.assume_role_policy
+  count                 = var.enable && var.create_iam_role ? 1 : 0
+  name                  = format("%s-role", module.labels.id)
+  assume_role_policy    = var.assume_role_policy
+  force_detach_policies = var.force_detach_policies
+  managed_policy_arns   = var.managed_policy_arns
+  max_session_duration  = var.max_session_duration
+  name_prefix           = var.name_prefix
+  path                  = var.path
+  permissions_boundary  = var.permissions_boundary
 }
 
 ##-----------------------------------------------------------------------------
 ## Terraform module to create Iam policy resource on AWS for lambda.
 ##-----------------------------------------------------------------------------
 resource "aws_iam_policy" "default" {
-  count       = var.enable && var.create_iam_role ? 1 : 0
-  name        = format("%s-additional-permissions", module.labels.id)
-  path        = var.aws_iam_policy_path
-  description = "Additional permission for ${module.labels.id} Lambda Function IAMRole."
-  policy      = data.aws_iam_policy_document.default[0].json
+  count                             = var.enable && var.create_iam_role ? 1 : 0
+  name                              = format("%s-additional-permissions", module.labels.id)
+  path                              = var.aws_iam_policy_path
+  description                       = "Additional permission for ${module.labels.id} Lambda Function IAMRole."
+  policy                            = data.aws_iam_policy_document.default[0].json
+  name_prefix                       = var.name_prefix
+  delay_after_policy_creation_in_ms = var.delay_after_policy_creation_in_ms
 }
 
 #tfsec:ignore:aws-iam-no-policy-wildcards
@@ -285,11 +301,15 @@ data "aws_cloudwatch_log_group" "lambda" {
 }
 
 resource "aws_cloudwatch_log_group" "lambda" {
-  count             = var.enable && !var.existing_cloudwatch_log_group ? 1 : 0
-  name              = "/aws/lambda/${module.labels.id}"
-  retention_in_days = var.cloudwatch_logs_retention_in_days
-  kms_key_id        = var.enable_kms ? aws_kms_key.kms[1].arn : var.cloudwatch_logs_kms_key_arn
-  tags              = module.labels.tags
+  count                       = var.enable && !var.existing_cloudwatch_log_group ? 1 : 0
+  name                        = "/aws/lambda/${module.labels.id}"
+  retention_in_days           = var.cloudwatch_logs_retention_in_days
+  kms_key_id                  = var.enable_kms ? aws_kms_key.kms[1].arn : var.cloudwatch_logs_kms_key_arn
+  tags                        = module.labels.tags
+  log_group_class             = var.log_group_class
+  deletion_protection_enabled = var.deletion_protection_enabled
+  name_prefix                 = var.name_prefix
+  region                      = var.region
 }
 
 data "aws_iam_policy_document" "logs" {

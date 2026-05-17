@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-05-17
+### :sparkles: New Features
+- Updated module for AWS provider v5+ compatibility
+- Added new optional variables with safe defaults (backward-compatible)
+- Updated docs/terraform-docs.md and examples/basic-function/example.tf, examples/basic-s3-function/example.tf, examples/complete-function/example.tf
+
 ## [1.3.1] - 2023-11-15
 ### :sparkles: New Features
 - [`86d967d`](https://github.com/clouddrove/terraform-aws-lambda/commit/86d967def3a2746c31ebd8b50b6e5b85699606c6) - auto changelog action added *(commit by [@mamrajyadav](https://github.com/mamrajyadav))*

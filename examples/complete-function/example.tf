@@ -57,4 +57,18 @@ module "lambda" {
   variables = {
     foo = "bar"
   }
+  # code_sha256 = <SHA256_HASH>  # SHA256 hash of the function code.
+  # replace_security_groups_on_destroy = true  # Replace security groups on destroy.
+  # publish_to = <PUBLISH_CONFIG>  # Publish configuration.
+  # replacement_security_group_ids = ["sg-123456"]  # List of replacement security group IDs.
+  # force_detach_policies = false  # Force detach policies.
+  # managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]  # List of managed policy ARNs.
+  # max_session_duration = 3600  # Max session duration.
+  # source_kms_key_arn = <KMS_KEY_ARN>  # ARN of the source KMS key.
+  # path = /my/path/  # Path for the role.
+  # permissions_boundary = <PERMISSIONS_BOUNDARY>  # Permissions boundary for the role.
+  # delay_after_policy_creation_in_ms = 1000  # Delay after policy creation in milliseconds.
+  # deletion_protection_enabled = true  # Enable deletion protection.
+  # name_prefix = my-prefix-  # Prefix for the name.
+  # log_group_class = <LOG_GROUP_CLASS>  # Class for the log group.
 }

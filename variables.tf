@@ -440,3 +440,99 @@ variable "aws_iam_policy_path" {
   default     = "/"
   description = "IAM policy path default value"
 }
+
+variable "code_sha256" {
+  type        = string
+  default     = null
+  description = "SHA256 hash of the function code."
+}
+
+variable "region" {
+  type        = string
+  default     = null
+  description = "The AWS region where the resources will be created."
+}
+
+variable "replace_security_groups_on_destroy" {
+  type        = bool
+  default     = false
+  description = "Replace security groups on destroy."
+}
+
+variable "publish_to" {
+  type        = string
+  default     = null
+  description = "Publish configuration."
+}
+
+variable "replacement_security_group_ids" {
+  type        = list(string)
+  default     = []
+  description = "List of replacement security group IDs."
+}
+
+variable "source_kms_key_arn" {
+  type        = string
+  default     = null
+  description = "ARN of the source KMS key."
+}
+
+variable "managed_policy_arns" {
+  type        = list(string)
+  default     = []
+  description = "List of managed policy ARNs."
+}
+
+variable "force_detach_policies" {
+  type        = bool
+  default     = false
+  description = "Force detach policies."
+}
+
+variable "max_session_duration" {
+  type        = number
+  default     = null
+  description = "Max session duration."
+}
+
+variable "name_prefix" {
+  type        = string
+  default     = null
+  description = "Prefix for the name."
+}
+
+variable "path" {
+  type        = string
+  default     = null
+  description = "Path for the role."
+}
+
+variable "permissions_boundary" {
+  type        = string
+  default     = null
+  description = "Permissions boundary for the role."
+}
+
+variable "delay_after_policy_creation_in_ms" {
+  type        = number
+  default     = null
+  description = "Delay after policy creation in milliseconds."
+}
+
+variable "deletion_protection_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable deletion protection."
+}
+
+variable "log_group_class" {
+  type        = string
+  default     = null
+  description = "Class for the log group."
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "A map of tags to add to all resources"
+}
