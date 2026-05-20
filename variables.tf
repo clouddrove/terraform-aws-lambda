@@ -440,3 +440,14 @@ variable "aws_iam_policy_path" {
   default     = "/"
   description = "IAM policy path default value"
 }
+
+variable "logging_config" {
+  description = "Structured logging config for Lambda. log_format: JSON or Text. Optional: application_log_level, system_log_level, log_group."
+  type = object({
+    log_format            = string
+    application_log_level = optional(string)
+    system_log_level      = optional(string)
+    log_group             = optional(string)
+  })
+  default = null
+}
