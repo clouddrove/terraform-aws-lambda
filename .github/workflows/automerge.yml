@@ -1,12 +1,17 @@
----
 name: Auto merge
+
 on:
   pull_request:
+
+permissions:
+  contents: write
+  checks: read
+  pull-requests: write
+
 jobs:
   auto-merge:
     uses: clouddrove/github-shared-workflows/.github/workflows/pr-auto-merge.yml@master
     secrets:
       GITHUB: ${{ secrets.GITHUB_TOKEN }}
     with:
-      tfcheck: 'basic-function-example / Check code format'
-...
+      tfcheck: 'tf-checks-basic-example / Check code format'
