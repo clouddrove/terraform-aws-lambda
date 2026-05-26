@@ -44,6 +44,7 @@
 | layer\_names | A unique name for your Lambda Layer. | `list(any)` | `[]` | no |
 | layers | List of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda Function. | `list(string)` | `null` | no |
 | license\_infos | License info for your Lambda Layer. See License Info. | `list(any)` | `[]` | no |
+| logging\_config | Structured logging config for Lambda. log\_format: JSON or Text. Optional: application\_log\_level, system\_log\_level, log\_group. | <pre>object({<br>    log_format            = string<br>    application_log_level = optional(string)<br>    system_log_level      = optional(string)<br>    log_group             = optional(string)<br>  })</pre> | `null` | no |
 | managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
 | memory\_size | Amount of memory in MB your Lambda Function can use at runtime. Defaults to 128. | `number` | `128` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
