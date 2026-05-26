@@ -105,6 +105,17 @@ resource "aws_lambda_function" "default" {
     }
   }
 
+  dynamic "logging_config" {
+    for_each = var.logging_config != null ? [var.logging_config] : []
+
+    content {
+      log_format            = logging_config.value.log_format
+      application_log_level = try(logging_config.value.application_log_level, null)
+      system_log_level      = try(logging_config.value.system_log_level, null)
+      log_group             = try(logging_config.value.log_group, null)
+    }
+  }
+
   dynamic "vpc_config" {
     for_each = var.subnet_ids != null && var.security_group_ids != null ? [true] : []
     content {
@@ -232,7 +243,7 @@ resource "aws_kms_key_policy" "lambda" {
       },
       {
         "Effect" : "Allow",
-        "Principal" : { "Service" : "lambda.${data.aws_region.current.name}.amazonaws.com" },
+        "Principal" : { "Service" : "lambda.${data.aws_region.current.region}.amazonaws.com" },
         "Action" : [
           "kms:Encrypt*",
           "kms:Decrypt*",
@@ -263,7 +274,7 @@ resource "aws_kms_key_policy" "cloudwatch" {
       },
       {
         "Effect" : "Allow",
-        "Principal" : { "Service" : "logs.${data.aws_region.current.name}.amazonaws.com" },
+        "Principal" : { "Service" : "logs.${data.aws_region.current.region}.amazonaws.com" },
         "Action" : [
           "kms:Encrypt*",
           "kms:Decrypt*",

@@ -458,3 +458,14 @@ variable "bypass_policy_lockout_safety_check" {
   default     = false
   description = "Bypass policy lockout safety check for KMS key, added for provider v6.0+"
 }
+
+variable "logging_config" {
+  description = "Structured logging config for Lambda. log_format: JSON or Text. Optional: application_log_level, system_log_level, log_group."
+  type = object({
+    log_format            = string
+    application_log_level = optional(string)
+    system_log_level      = optional(string)
+    log_group             = optional(string)
+  })
+  default = null
+}
