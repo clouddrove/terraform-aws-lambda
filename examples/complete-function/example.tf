@@ -57,4 +57,7 @@ module "lambda" {
   variables = {
     foo = "bar"
   }
+  # permissions_boundary = null  # Optional: IAM permissions boundary ARN
+  # max_session_duration = 3600  # Optional: max IAM role session duration in seconds (default 3600)
+  # bypass_policy_lockout_safety_check = false  # Optional: bypass KMS key policy lockout safety check
 }

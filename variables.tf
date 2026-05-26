@@ -441,6 +441,24 @@ variable "aws_iam_policy_path" {
   description = "IAM policy path default value"
 }
 
+variable "max_session_duration" {
+  type        = number
+  default     = null
+  description = "Maximum session duration for IAM role, added for provider v6.0+"
+}
+
+variable "permissions_boundary" {
+  type        = string
+  default     = null
+  description = "Permissions boundary for IAM role, added for provider v6.0+"
+}
+
+variable "bypass_policy_lockout_safety_check" {
+  type        = bool
+  default     = false
+  description = "Bypass policy lockout safety check for KMS key, added for provider v6.0+"
+}
+
 variable "logging_config" {
   description = "Structured logging config for Lambda. log_format: JSON or Text. Optional: application_log_level, system_log_level, log_group."
   type = object({
