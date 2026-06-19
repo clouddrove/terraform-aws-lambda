@@ -8,6 +8,7 @@
 | attach\_cloudwatch\_logs\_policy | Controls whether CloudWatch Logs policy should be added to IAM role for Lambda Function | `bool` | `true` | no |
 | attributes | Additional attributes (e.g. `1`). | `list(any)` | `[]` | no |
 | aws\_iam\_policy\_path | IAM policy path default value | `string` | `"/"` | no |
+| bypass\_policy\_lockout\_safety\_check | Bypass policy lockout safety check for KMS key, added for provider v6.0+ | `bool` | `false` | no |
 | cloudwatch\_logs\_kms\_key\_arn | The arn for the KMS encryption key for cloudwatch log group | `string` | `null` | no |
 | cloudwatch\_logs\_retention\_in\_days | Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653. | `number` | `null` | no |
 | code\_signing\_config\_arn | Amazon Resource Name (ARN) for a Code Signing Configuration | `string` | `null` | no |
@@ -46,9 +47,11 @@
 | license\_infos | License info for your Lambda Layer. See License Info. | `list(any)` | `[]` | no |
 | logging\_config | Structured logging config for Lambda. log\_format: JSON or Text. Optional: application\_log\_level, system\_log\_level, log\_group. | <pre>object({<br>    log_format            = string<br>    application_log_level = optional(string)<br>    system_log_level      = optional(string)<br>    log_group             = optional(string)<br>  })</pre> | `null` | no |
 | managedby | ManagedBy, eg 'CloudDrove'. | `string` | `"hello@clouddrove.com"` | no |
+| max\_session\_duration | Maximum session duration for IAM role, added for provider v6.0+ | `number` | `null` | no |
 | memory\_size | Amount of memory in MB your Lambda Function can use at runtime. Defaults to 128. | `number` | `128` | no |
 | name | Name  (e.g. `app` or `cluster`). | `string` | `""` | no |
 | package\_type | The Lambda deployment package type. Valid options: Zip or Image | `string` | `"Zip"` | no |
+| permissions\_boundary | Permissions boundary for IAM role, added for provider v6.0+ | `string` | `null` | no |
 | policy\_path | Path of policies to that should be added to IAM role for Lambda Function | `string` | `null` | no |
 | principal\_org\_id | The identifier for your organization in AWS Organizations. Use this to grant permissions to all the AWS accounts under this organization. | `string` | `null` | no |
 | principals | The principal who is getting this permission. e.g. s3.amazonaws.com, an AWS account ID, or any valid AWS service principal such as events.amazonaws.com or sns.amazonaws.com. | `list(any)` | `[]` | no |
